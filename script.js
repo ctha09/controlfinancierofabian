@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicialización de datos
     let transactions = JSON.parse(localStorage.getItem('finance_v8_data')) || [];
     let isDark = true;
 
-    // DOM Elements
     const listEl = document.getElementById('list');
     const themeBtn = document.getElementById('themeBtn');
     const addBtn = document.getElementById('addBtn');
@@ -10,26 +10,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const balanceEl = document.getElementById('kpi-balance');
     const modal = document.getElementById('chartModal');
 
-    // --- GRÁFICAS (Configuración estándar) ---
+    // --- GRÁFICAS ---
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        data: { labels: [], datasets: [{ label: 'Balance Acumulado', data: [], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4 }] },
+        options: { 
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.05)' } }, x: { ticks: { color: '#94a3b8' }, grid: { display: false } } }
+        }
     });
 
     const pieCtx = document.getElementById('pieChart').getContext('2d');
     const pieChart = new Chart(pieCtx, {
         type: 'doughnut',
-        data: { labels: ['Egresos', 'Mercadería', 'Inmuebles', 'Gastos Pers.'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#f43f5e', '#fbbf24', '#3b82f6', '#10b981'], borderWidth: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+        data: { 
+            labels: ['Egresos', 'Mercadería', 'Inmuebles', 'Gastos Pers.'], 
+            datasets: [{ data: [0,0,0,0], backgroundColor: ['#f43f5e', '#fbbf24', '#3b82f6', '#10b981'], borderWidth: 0 }] 
+        },
+        options: { 
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 20 } } }
+        }
     });
 
-    // --- CORE FUNCTIONS ---
+    // --- LÓGICA DE ACTUALIZACIÓN ---
     function updateUI() {
         let balance = 0, income = 0, expenses = 0;
         let catStats = { "Egresos": 0, "Compra de Mercaderia": 0, "Compra de Inmuebles": 0, "Gastos Personales": 0 };
         let lineData = [], lineLabels = [];
+
         listEl.innerHTML = '';
 
         transactions.forEach((t) => {
@@ -55,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </span>
                     <button class="delete-btn" onclick="deleteTransaction(${t.id})">🗑️</button>
                 </div>`;
-            listEl.appendChild(item);
+            listEl.prepend(item);
         });
 
         balanceEl.innerText = `$${balance.toLocaleString()}`;
@@ -73,85 +84,50 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finance_v8_data', JSON.stringify(transactions));
     }
 
-    // --- EXPORTAR A EXCEL ---
-    document.getElementById('exportExcel').addEventListener('click', () => {
-        if(transactions.length === 0) return alert("No hay datos para exportar");
-        
-        const worksheet = XLSX.utils.json_to_sheet(transactions.map(t => ({
-            Fecha: t.date,
-            Descripción: t.desc,
-            Categoría: t.cat,
-            Monto: t.amt,
-            Tipo: (t.cat.includes('Ingresos')) ? 'Entrada' : 'Salida'
+    // --- EXPORTACIÓN ---
+    document.getElementById('exportExcel').onclick = () => {
+        if(!transactions.length) return alert("No hay datos");
+        const ws = XLSX.utils.json_to_sheet(transactions.map(t => ({
+            Fecha: t.date, Descripción: t.desc, Categoría: t.cat, Monto: t.amt, 
+            Tipo: t.cat.includes('Ingresos') ? 'Entrada' : 'Salida'
         })));
-        
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Finanzas");
-        XLSX.writeFile(workbook, `Reporte_FinanceFlow_${new Date().toLocaleDateString()}.xlsx`);
-    });
-
-    // --- EXPORTAR A PDF ---
-    document.getElementById('exportPdf').addEventListener('click', () => {
-        if(transactions.length === 0) return alert("No hay datos para exportar");
-        
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        doc.setFontSize(18);
-        doc.text("Reporte de Finanzas - FinanceFlow Elite", 14, 20);
-        doc.setFontSize(10);
-        doc.text(`Generado el: ${new Date().toLocaleString()}`, 14, 28);
-
-        const tableData = transactions.map(t => [
-            t.date, 
-            t.desc, 
-            t.cat, 
-            `${t.cat.includes('Ingresos') ? '+' : '-'}$${t.amt.toLocaleString()}`
-        ]);
-
-        doc.autoTable({
-            head: [['Fecha', 'Descripción', 'Categoría', 'Monto']],
-            body: tableData,
-            startY: 35,
-            theme: 'grid',
-            headStyles: { fillStyle: '#6366f1' }
-        });
-
-        doc.save("Reporte_Finanzas.pdf");
-    });
-
-    // --- UTILIDADES Y EVENTOS ---
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    window.deleteTransaction = (id) => {
-        if(confirm("¿Eliminar registro?")) {
-            transactions = transactions.filter(t => t.id !== id);
-            updateUI();
-        }
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Historial");
+        XLSX.writeFile(wb, `Finanzas_${new Date().toLocaleDateString()}.xlsx`);
     };
 
-    addBtn.addEventListener('click', () => {
+    document.getElementById('exportPdf').onclick = () => {
+        if(!transactions.length) return alert("No hay datos");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Reporte FinanceFlow Elite", 14, 15);
+        const data = transactions.map(t => [t.date, t.desc, t.cat, `$${t.amt.toLocaleString()}`]);
+        doc.autoTable({ head: [['Fecha', 'Detalle', 'Categoría', 'Monto']], body: data, startY: 25 });
+        doc.save("Reporte_Finanzas.pdf");
+    };
+
+    // --- EVENTOS ---
+    addBtn.onclick = () => {
         const d = document.getElementById('desc'), a = document.getElementById('amt'), c = document.getElementById('cat');
-        if(!d.value || isNaN(parseFloat(a.value))) return alert("Datos incompletos");
-        
+        if(!d.value || isNaN(parseFloat(a.value))) return alert("Datos inválidos");
         transactions.push({ id: Date.now(), desc: d.value, amt: parseFloat(a.value), cat: c.value, date: new Date().toLocaleDateString() });
         updateUI();
         d.value = ''; a.value = '';
-    });
+    };
 
-    clearBtn.addEventListener('click', () => {
-        if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); }
-    });
+    window.deleteTransaction = (id) => {
+        if(confirm("¿Eliminar registro?")) { transactions = transactions.filter(t => t.id !== id); updateUI(); }
+    };
 
-    themeBtn.addEventListener('click', () => {
+    clearBtn.onclick = () => { if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); } };
+
+    themeBtn.onclick = () => {
         isDark = !isDark;
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
         themeBtn.innerText = isDark ? '🌙 MODO OSCURO' : '☀️ MODO CLARO';
-    });
+    };
+
+    function escapeHtml(t) { const e = document.createElement('div'); e.textContent = t; return e.innerHTML; }
 
     updateUI();
 });
