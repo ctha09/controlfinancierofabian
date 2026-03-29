@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Session v8.0</title>
+    <title>FinanceFlow Elite v6.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -11,64 +11,76 @@
 <body>
 
 <div class="container">
-    <header class="app-header">
-        <h1 class="logo">💎 FinanceFlow</h1>
-        <button class="theme-toggle" id="themeBtn">🌙</button>
+    <header>
+        <h1 class="logo">💎 FinanceFlow Elite</h1>
+        <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
     </header>
 
-    <div class="kpi-container">
-        <div class="kpi-card main-balance">
-            <span class="kpi-label">BALANCE SESIÓN ACTUAL</span>
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <span class="kpi-label">BALANCE NETO</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
-        <div class="kpi-sub-row">
-            <div class="kpi-card income-card">
-                <span class="kpi-label">INGRESOS</span>
-                <div class="kpi-value income-text" id="kpi-in">$0</div>
-            </div>
-            <div class="kpi-card expense-card">
-                <span class="kpi-label">EGRESOS</span>
-                <div class="kpi-value expense-text" id="kpi-out">$0</div>
-            </div>
+        <div class="kpi-card income-card">
+            <span class="kpi-label">INGRESOS</span>
+            <div class="kpi-value income-text" id="kpi-in">$0</div>
+        </div>
+        <div class="kpi-card expense-card">
+            <span class="kpi-label">GASTOS</span>
+            <div class="kpi-value expense-text" id="kpi-out">$0</div>
         </div>
     </div>
 
-    <div class="main-grid">
-        <section class="glass-panel action-panel">
-            <h3 class="section-title">Nueva Operación</h3>
-            <div class="form-grid">
-                <input type="text" id="desc" placeholder="Descripción" class="mobile-input">
-                <input type="number" id="amt" placeholder="Monto $0.00" class="mobile-input">
-                <select id="cat" class="mobile-input">
+    <div class="db-grid">
+        <aside class="glass-panel form-section">
+            <h3>Nueva Operación</h3>
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" id="desc" placeholder="Ej: Venta de producto">
+            </div>
+            <div class="form-group">
+                <label>Monto</label>
+                <input type="number" id="amt" placeholder="0.00" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select id="cat">
                     <option value="Ingresos Reales">💰 Ingresos Reales</option>
                     <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
                     <option value="Egresos">📉 Egresos</option>
-                    <option value="Mercaderias">📦 Mercaderías</option>
-                    <option value="Inmuebles">🏠 Inmuebles</option>
-                    <option value="Gastos Personales">👤 Personales</option>
+                    <option value="Mercaderias">📦 Compra Mercaderías</option>
+                    <option value="Inmuebles">🏠 Compra Inmuebles</option>
+                    <option value="Gastos Personales">👤 Gastos Personales</option>
                 </select>
-                <button class="btn-primary" id="addBtn">Añadir a la lista</button>
             </div>
-        </section>
+            <button class="btn-add" id="addBtn">Registrar</button>
+            <button class="btn-clear" id="clearBtn">Borrar Todo el Historial</button>
+        </aside>
 
-        <section class="charts-section">
-            <div class="chart-card" id="lineBox">
-                <div class="chart-header"><span>FLUJO DE CAJA</span></div>
-                <div class="canvas-wrapper"><canvas id="lineChart"></canvas></div>
+        <main class="charts-col">
+            <div class="chart-container" id="lineBox">
+                <h4 class="chart-title">FLUJO DE CAJA 🔍</h4>
+                <canvas id="lineChart"></canvas>
             </div>
-            <div class="chart-card" id="pieBox">
-                <div class="chart-header"><span>DISTRIBUCIÓN CATEGORÍAS</span></div>
-                <div class="canvas-wrapper"><canvas id="pieChart"></canvas></div>
+            <div class="chart-container" id="pieBox">
+                <h4 class="chart-title">GASTOS POR CATEGORÍA 🔍</h4>
+                <canvas id="pieChart"></canvas>
             </div>
-        </section>
+        </main>
 
-        <section class="glass-panel history-section">
-            <div class="history-header">
-                <h3 class="section-title">Historial de Sesión</h3>
-                <button id="clearBtn" class="btn-text-only">Limpiar pantalla</button>
-            </div>
+        <div class="glass-panel history-panel">
+            <h3>Historial</h3>
             <div id="list" class="transaction-list"></div>
-        </section>
+        </div>
+    </div>
+</div>
+
+<div id="chartModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <canvas id="zoomedChart"></canvas>
+        </div>
     </div>
 </div>
 
