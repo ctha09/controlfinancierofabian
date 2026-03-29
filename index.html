@@ -35,6 +35,10 @@
             <span class="kpi-label">TOTAL EGRESOS</span>
             <div class="kpi-value expense-text" id="kpi-out">$0</div>
         </div>
+        <div class="kpi-card provider-card">
+            <span class="kpi-label">GASTO PROVEEDORES</span>
+            <div class="kpi-value" id="kpi-providers" style="color: #a855f7;">$0</div>
+        </div>
     </div>
 
     <div class="db-grid">
@@ -89,32 +93,20 @@
             <button class="btn-add" id="addBtn">Registrar</button>
             
             <div class="export-tools">
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin: 15px 0 5px; font-weight: 800;">REPORTE DE DATOS</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <button class="btn-export excel" id="exportExcel">Excel</button>
                     <button class="btn-export pdf" id="exportPdf">PDF</button>
                 </div>
             </div>
-
             <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
         </aside>
 
         <main class="charts-col">
-            <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA ACUMULADO 🔍</h4>
-                <canvas id="lineChart"></canvas>
-            </div>
-            <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN DE EGRESOS 🔍</h4>
-                <canvas id="pieChart"></canvas>
-            </div>
+            <div class="chart-container" id="lineBox"><canvas id="lineChart"></canvas></div>
+            <div class="chart-container" id="pieBox"><canvas id="pieChart"></canvas></div>
         </main>
 
         <div class="glass-panel history-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>Historial</h3>
-                <small id="count-msg" style="color:var(--text-muted)"></small>
-            </div>
             <div id="list" class="transaction-list"></div>
         </div>
     </div>
