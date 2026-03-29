@@ -1,16 +1,15 @@
 {
-  "name": "FinanceFlow Personal",
+  "name": "FinanceFlow",
   "short_name": "FinanceFlow",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#050505",
+  "background_color": "#000000",
   "theme_color": "#00ff88",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "1024x1024",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ]
 }
