@@ -3,49 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi App Profesional</title>
-    
+    <title>Dashboard Profesional | Carlos Acosta</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a0a0a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    
     <style>
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        :root {
+            --primary: #00d2ff;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            padding: 20px;
             border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--primary); }
+
+        /* Grid de Secciones */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 24px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1);
+        }
+
+        .card h3 { margin-top: 0; color: var(--primary); }
+        
+        .btn {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Mi Aplicación Instalable</h1>
-        <p>Si estás en Chrome o Edge, verás el icono de instalar arriba.</p>
+    <div class="container">
+        <header>
+            <div class="logo">CARLOS ACOSTA // PROMO 2026</div>
+            <div id="status" style="font-size: 0.8rem; opacity: 0.6;">App Online</div>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Tesorería</h3>
+                <p>Gestiona ingresos, egresos y ventas de käsestangen.</p>
+                <button class="btn">Abrir Panel</button>
+            </div>
+
+            <div class="card">
+                <h3>Comenzá a Vender</h3>
+                <p>Catálogo de clientes: TechGlobal, FinanceFlow, RopaUrbana.</p>
+                <button class="btn">Ver Catálogo</button>
+            </div>
+
+            <div class="card">
+                <h3>Culinaria</h3>
+                <p>Administración de pedidos vía WhatsApp.</p>
+                <button class="btn">Gestionar Menú</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Registro del Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker activo', reg))
-                    .catch(err => console.error('Error en SW', err));
+                    .then(() => console.log("Sistema listo."));
             });
         }
     </script>
