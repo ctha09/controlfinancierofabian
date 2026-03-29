@@ -1,110 +1,53 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v8.0 - Enterprise</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi App Profesional</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    
-    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1 class="logo">💎 FinanceFlow Elite <span style="font-size: 0.6rem; opacity: 0.5;">PRO</span></h1>
-        <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
-    </header>
-
-    <div class="kpi-row">
-        <div class="kpi-card">
-            <span class="kpi-label">BALANCE NETO</span>
-            <div class="kpi-value" id="kpi-balance">$0</div>
-        </div>
-        <div class="kpi-card income-card">
-            <span class="kpi-label">TOTAL INGRESOS</span>
-            <div class="kpi-value income-text" id="kpi-in">$0</div>
-        </div>
-        <div class="kpi-card expense-card">
-            <span class="kpi-label">TOTAL EGRESOS</span>
-            <div class="kpi-value expense-text" id="kpi-out">$0</div>
-        </div>
+    <div class="card">
+        <h1>Mi Aplicación Instalable</h1>
+        <p>Si estás en Chrome o Edge, verás el icono de instalar arriba.</p>
     </div>
 
-    <div class="db-grid">
-        <aside class="glass-panel form-section">
-            <h3>Nueva Operación</h3>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta de Mercadería">
-            </div>
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="cat">
-                    <optgroup label="Entradas">
-                        <option value="Ingresos Reales">💰 Ingresos Reales</option>
-                        <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
-                    </optgroup>
-                    <optgroup label="Salidas">
-                        <option value="Egresos">💸 Egresos</option>
-                        <option value="Compra de Mercaderia">📦 Compra de Mercadería</option>
-                        <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
-                        <option value="Gastos Personales">🛍️ Gastos Personales</option>
-                    </optgroup>
-                </select>
-            </div>
-            <button class="btn-add" id="addBtn">Registrar</button>
-            
-            <div class="export-tools">
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin: 15px 0 5px; font-weight: 800;">REPORTE DE DATOS</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button class="btn-export excel" id="exportExcel">Excel</button>
-                    <button class="btn-export pdf" id="exportPdf">PDF</button>
-                </div>
-            </div>
-
-            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
-        </aside>
-
-        <main class="charts-col">
-            <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA ACUMULADO 🔍</h4>
-                <canvas id="lineChart"></canvas>
-            </div>
-            <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN DE EGRESOS 🔍</h4>
-                <canvas id="pieChart"></canvas>
-            </div>
-        </main>
-
-        <div class="glass-panel history-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>Historial</h3>
-                <small id="count-msg" style="color:var(--text-muted)"></small>
-            </div>
-            <div id="list" class="transaction-list"></div>
-        </div>
-    </div>
-</div>
-
-<div id="chartModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-body">
-            <canvas id="zoomedChart"></canvas>
-        </div>
-    </div>
-</div>
-
-<script src="script.js"></script>
+    <script>
+        // Registro del Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker activo', reg))
+                    .catch(err => console.error('Error en SW', err));
+            });
+        }
+    </script>
 </body>
 </html>
