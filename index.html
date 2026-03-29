@@ -2,8 +2,8 @@
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>FinanceFlow Elite v6.0</title>
+    <meta name="viewport" content="width=1400">
+    <title>FinanceFlow Elite v6.0 - Desktop Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -19,7 +19,7 @@
     </header>
 
     <div class="kpi-row">
-        <div class="kpi-card main-balance">
+        <div class="kpi-card">
             <span class="kpi-label">BALANCE NETO</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
@@ -38,11 +38,11 @@
             <h3>Nueva Operación</h3>
             <div class="form-group">
                 <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta de mercadería">
+                <input type="text" id="desc" placeholder="Ej: Venta Mercadería">
             </div>
             <div class="form-group">
                 <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00" step="0.01">
+                <input type="number" id="amt" placeholder="0.00">
             </div>
             <div class="form-group">
                 <label>Categoría</label>
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Limpiar Todo</button>
+            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
         </aside>
 
         <main class="charts-col">
