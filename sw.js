@@ -1,44 +1,31 @@
-const CACHE_NAME = 'v1_cache_carlos_app';
-const urlsToCache = [
+const CACHE_NAME = 'v2_dashboard_carlos'; // Cambiado a v2
+const assets = [
   './',
   './index.html',
   './manifest.json'
 ];
 
-// Instalación: descarga los archivos básicos
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache)
-          .then(() => self.skipWaiting());
-      })
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(assets);
+    })
   );
 });
 
-// Activación: limpia versiones viejas de cache
 self.addEventListener('activate', e => {
-  const cacheWhitelist = [CACHE_NAME];
   e.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
+    caches.keys().then(keys => {
+      return Promise.all(keys
+        .filter(key => key !== CACHE_NAME)
+        .map(key => caches.delete(key))
       );
     })
   );
 });
 
-// Estrategia de respuesta: Cache primero, luego red
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request)
-      .then(res => {
-        if (res) return res;
-        return fetch(e.request);
-      })
+    caches.match(e.request).then(res => res || fetch(e.request))
   );
 });
