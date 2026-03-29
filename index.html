@@ -2,88 +2,73 @@
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1400">
-    <title>FinanceFlow Elite v6.0 - Desktop Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FinanceFlow v6.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="notification-area"></div>
-
 <div class="container">
-    <header>
-        <h1 class="logo">💎 FinanceFlow Elite</h1>
-        <button class="theme-btn" id="themeBtn">🌙 MODO</button>
+    <header class="main-header">
+        <div class="brand">
+            <span class="icon">💎</span>
+            <h1>FinanceFlow</h1>
+        </div>
+        <button class="theme-btn" id="themeBtn">🌙</button>
     </header>
 
-    <div class="kpi-row">
-        <div class="kpi-card">
-            <span class="kpi-label">BALANCE NETO</span>
-            <div class="kpi-value" id="kpi-balance">$0</div>
+    <section class="balance-hero">
+        <p class="label">Balance Total Actual</p>
+        <h2 id="kpi-balance">$0</h2>
+        <div class="mini-stats">
+            <div class="stat-item">
+                <span class="dot green"></span>
+                <span>Ingresos: <strong id="kpi-in" class="income-text">$0</strong></span>
+            </div>
+            <div class="stat-item">
+                <span class="dot red"></span>
+                <span>Gastos: <strong id="kpi-out" class="expense-text">$0</strong></span>
+            </div>
         </div>
-        <div class="kpi-card income-card">
-            <span class="kpi-label">INGRESOS</span>
-            <div class="kpi-value income-text" id="kpi-in">$0</div>
-        </div>
-        <div class="kpi-card expense-card">
-            <span class="kpi-label">GASTOS</span>
-            <div class="kpi-value expense-text" id="kpi-out">$0</div>
-        </div>
-    </div>
+    </section>
 
-    <div class="db-grid">
-        <aside class="glass-panel form-section">
-            <h3>Nueva Operación</h3>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta Mercadería">
-            </div>
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="cat">
-                    <option value="Ingresos Teóricos">💰 Ingresos Teóricos</option>
-                    <option value="Ingresos Reales">💵 Ingresos Reales</option>
-                    <option value="Egresos">📉 Egresos</option>
-                    <option value="Gastos de Compra de Mercadería">📦 Compra Mercadería</option>
-                    <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
-                    <option value="Gastos Personales">🛍️ Gastos Personales</option>
-                </select>
-            </div>
-            <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
-        </aside>
-
-        <main class="charts-col">
-            <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA 🔍</h4>
-                <canvas id="lineChart"></canvas>
-            </div>
-            <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN DE GASTOS 🔍</h4>
-                <canvas id="pieChart"></canvas>
-            </div>
-        </main>
-
-        <div class="glass-panel history-panel">
-            <h3>Historial</h3>
-            <div id="list" class="transaction-list"></div>
+    <section class="glass-panel form-card">
+        <h3>Nueva Operación</h3>
+        <div class="input-grid">
+            <input type="text" id="desc" placeholder="Descripción (ej: Venta mercadería)">
+            <input type="number" id="amt" placeholder="Monto (0.00)" step="0.01">
+            <select id="cat">
+                <option value="Ingresos Teóricos">💰 Ingresos Teóricos</option>
+                <option value="Ingresos Reales">💵 Ingresos Reales</option>
+                <option value="Egresos">📉 Egresos</option>
+                <option value="Gastos de Compra de Mercadería">📦 Compra Mercadería</option>
+                <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
+                <option value="Gastos Personales">🛍️ Gastos Personales</option>
+            </select>
         </div>
-    </div>
-</div>
+        <button class="btn-primary" id="addBtn">Registrar Movimiento</button>
+    </section>
 
-<div id="chartModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-body">
-            <canvas id="zoomedChart"></canvas>
+    <section class="visuals-grid">
+        <div class="glass-panel chart-box">
+            <p class="chart-label">Flujo de Caja</p>
+            <div class="canvas-wrapper"><canvas id="lineChart"></canvas></div>
         </div>
-    </div>
+        <div class="glass-panel chart-box">
+            <p class="chart-label">Distribución de Egresos</p>
+            <div class="canvas-wrapper"><canvas id="pieChart"></canvas></div>
+        </div>
+    </section>
+
+    <section class="glass-panel history-card">
+        <div class="history-header">
+            <h3>Actividad Reciente</h3>
+            <button class="btn-text" id="clearBtn">Limpiar historial</button>
+        </div>
+        <div id="list" class="transaction-list"></div>
+    </section>
 </div>
 
 <script src="script.js"></script>
