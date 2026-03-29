@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let transactions = JSON.parse(localStorage.getItem('finance_v6_data')) || [];
+    // Los datos comienzan vacíos cada vez que abres la página
+    let transactions = [];
     let isDark = true;
 
-    // --- ELEMENTOS ---
     const listEl = document.getElementById('list');
     const themeBtn = document.getElementById('themeBtn');
-    const modal = document.getElementById('chartModal');
 
-    // --- GRÁFICAS ---
+    // --- CONFIGURACIÓN DE GRÁFICAS ---
     const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const lineChart = new Chart(document.getElementById('lineChart'), {
         type: 'line',
-        data: { labels: [], datasets: [{ data: [], borderColor: '#6366f1', tension: 0.4, fill: true, backgroundColor: 'rgba(99, 102, 241, 0.1)' }] },
+        data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#6366f1', tension: 0.4, fill: true, backgroundColor: 'rgba(99, 102, 241, 0.1)' }] },
         options: commonOptions
     });
 
@@ -24,12 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'doughnut',
         data: { 
             labels: ['Ingresos Reales', 'Ingresos Teoricos', 'Egresos', 'Mercaderias', 'Inmuebles', 'Gastos Personales'],
-            datasets: [{ data: [], backgroundColor: ['#10b981', '#3b82f6', '#f43f5e', '#fbbf24', '#8b5cf6', '#64748b'], borderWidth: 0 }]
+            datasets: [{ data: [0,0,0,0,0,0], backgroundColor: ['#10b981', '#3b82f6', '#f43f5e', '#fbbf24', '#8b5cf6', '#64748b'], borderWidth: 0 }]
         },
-        options: { ...commonOptions, plugins: { legend: { display: window.innerWidth > 768, position: 'right' } } }
+        options: { 
+            ...commonOptions, 
+            plugins: { 
+                legend: { 
+                    display: window.innerWidth > 768, 
+                    position: 'right',
+                    labels: { color: '#94a3b8', font: { size: 10 } }
+                } 
+            } 
+        }
     });
 
-    // --- LÓGICA ---
+    // --- ACTUALIZACIÓN DE INTERFAZ ---
     function updateUI() {
         let balance = 0, income = 0, expenses = 0;
         let categories = { "Ingresos Reales": 0, "Ingresos Teoricos": 0, "Egresos": 0, "Mercaderias": 0, "Inmuebles": 0, "Gastos Personales": 0 };
@@ -68,26 +76,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pieChart.data.datasets[0].data = Object.values(categories);
         pieChart.update();
-
-        localStorage.setItem('finance_v6_data', JSON.stringify(transactions));
     }
 
-    // --- EVENTOS ---
+    // --- BOTONES ---
     document.getElementById('addBtn').onclick = () => {
         const desc = document.getElementById('desc').value;
         const amt = parseFloat(document.getElementById('amt').value);
         const cat = document.getElementById('cat').value;
 
-        if(!desc || isNaN(amt)) return alert("Datos inválidos");
+        if(!desc || isNaN(amt)) return alert("Por favor, ingresa descripción y monto.");
 
         transactions.push({ desc, amt, cat });
         updateUI();
+        
         document.getElementById('desc').value = '';
         document.getElementById('amt').value = '';
     };
 
     document.getElementById('clearBtn').onclick = () => {
-        if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); }
+        transactions = [];
+        updateUI();
     };
 
     themeBtn.onclick = () => {
@@ -95,6 +103,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
         themeBtn.innerText = isDark ? '🌙' : '☀️';
     };
-
-    updateUI();
 });
