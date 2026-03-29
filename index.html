@@ -6,25 +6,20 @@
     <title>FinanceFlow Elite v8.0 - Enterprise</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="container">
     <header>
         <h1 class="logo">💎 FinanceFlow Elite <span style="font-size: 0.6rem; opacity: 0.5;">PRO</span></h1>
         <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
     </header>
-
     <div class="kpi-row">
         <div class="kpi-card">
             <span class="kpi-label">BALANCE NETO</span>
@@ -39,7 +34,6 @@
             <div class="kpi-value expense-text" id="kpi-out">$0</div>
         </div>
     </div>
-
     <div class="db-grid">
         <aside class="glass-panel form-section">
             <h3>Nueva Operación</h3>
@@ -67,56 +61,30 @@
                 </select>
             </div>
             <button class="btn-add" id="addBtn">Registrar</button>
-            
             <div class="export-tools">
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin: 15px 0 5px; font-weight: 800;">REPORTE DE DATOS</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <button class="btn-export excel" id="exportExcel">Excel</button>
                     <button class="btn-export pdf" id="exportPdf">PDF</button>
                 </div>
             </div>
-
             <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
         </aside>
-
         <main class="charts-col">
-            <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA ACUMULADO 🔍</h4>
-                <canvas id="lineChart"></canvas>
-            </div>
-            <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN DE EGRESOS 🔍</h4>
-                <canvas id="pieChart"></canvas>
-            </div>
+            <div class="chart-container" id="lineBox"><canvas id="lineChart"></canvas></div>
+            <div class="chart-container" id="pieBox"><canvas id="pieChart"></canvas></div>
         </main>
-
         <div class="glass-panel history-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>Historial</h3>
-                <small id="count-msg" style="color:var(--text-muted)"></small>
-            </div>
             <div id="list" class="transaction-list"></div>
         </div>
     </div>
 </div>
-
-<div id="chartModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-body">
-            <canvas id="zoomedChart"></canvas>
-        </div>
-    </div>
-</div>
-
 <script src="script.js"></script>
-
 <script>
-    // Registro para que sea instalable
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
+        navigator.serviceWorker.register('./sw.js').then(() => {
+            console.log("Service Worker registrado correctamente");
+        });
     }
 </script>
-
 </body>
 </html>
