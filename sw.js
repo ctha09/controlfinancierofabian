@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v2_dashboard_carlos'; // Cambiado a v2
+const CACHE_NAME = 'v3_financeflow_cache'; // Versión 3
 const assets = [
   './',
   './index.html',
