@@ -3,95 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v8.0 - Enterprise</title>
-    <link rel="manifest" href="manifest.json">
+    <title>FinanceFlow Elite v8.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1 class="logo">💎 FinanceFlow Elite <span style="font-size: 0.6rem; opacity: 0.5;">PRO</span></h1>
+        <h1 class="logo">💎 FinanceFlow Elite</h1>
         <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
     </header>
 
     <div class="kpi-row">
-        <div class="kpi-card">
-            <span class="kpi-label">BALANCE NETO</span>
-            <div class="kpi-value" id="kpi-balance">$0</div>
-        </div>
-        <div class="kpi-card income-card">
-            <span class="kpi-label">TOTAL INGRESOS</span>
-            <div class="kpi-value income-text" id="kpi-in">$0</div>
-        </div>
-        <div class="kpi-card expense-card">
-            <span class="kpi-label">TOTAL EGRESOS</span>
-            <div class="kpi-value expense-text" id="kpi-out">$0</div>
-        </div>
-        <div class="kpi-card provider-card">
-            <span class="kpi-label">GASTO PROVEEDORES</span>
-            <div class="kpi-value" id="kpi-providers" style="color: #a855f7;">$0</div>
-        </div>
+        <div class="kpi-card"><span class="kpi-label">BALANCE NETO</span><div class="kpi-value" id="kpi-balance">$0</div></div>
+        <div class="kpi-card"><span class="kpi-label">INGRESOS</span><div class="kpi-value income-text" id="kpi-in">$0</div></div>
+        <div class="kpi-card"><span class="kpi-label">EGRESOS</span><div class="kpi-value expense-text" id="kpi-out">$0</div></div>
+        <div class="kpi-card"><span class="kpi-label">PROVEEDORES</span><div class="kpi-value" id="kpi-providers" style="color:#a855f7">$0</div></div>
     </div>
 
     <div class="db-grid">
-        <aside class="glass-panel form-section">
+        <aside class="glass-panel">
             <h3>Nueva Operación</h3>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Pago de facturas">
-            </div>
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="cat">
-                    <optgroup label="Entradas">
-                        <option value="Ingresos Reales">💰 Ingresos Reales</option>
-                        <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
+            <input type="text" id="desc" placeholder="Descripción">
+            <input type="number" id="amt" placeholder="Monto">
+            <select id="cat">
+                <optgroup label="Entradas">
+                    <option value="Ingresos Reales">Ingresos Reales</option>
+                    <option value="Ingresos Teoricos">Ingresos Teóricos</option>
+                </optgroup>
+                <optgroup label="Salidas">
+                    <option value="Egresos">Egresos General</option>
+                    <option value="Compra de Mercaderia">Compra de Mercadería</option>
+                    <option value="Compra de Inmuebles">Compra de Inmuebles</option>
+                    <option value="Gastos Personales">Gastos Personales</option>
+                </optgroup>
+                <optgroup label="Proveedores">
+                    <option value="Agronina">Agronina</option><option value="Arcor">Arcor</option>
+                    <option value="Coca cola">Coca cola</option><option value="Cofra">Cofra</option>
+                    <option value="Manaos">Manaos</option><option value="Sandro">Sandro</option>
                     </optgroup>
-                    <optgroup label="Salidas">
-                        <option value="Egresos">💸 Egresos</option>
-                        <option value="Compra de Mercaderia">📦 Compra de Mercadería</option>
-                        <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
-                        <option value="Gastos Personales">🛍️ Gastos Personales</option>
-                    </optgroup>
-                    <optgroup label="Proveedores">
-                        <option value="Agronina">Agronina</option>
-                        <option value="Arcor">Arcor</option>
-                        <option value="Ceferino">Ceferino</option>
-                        <option value="Coca cola">Coca cola</option>
-                        <option value="Cofra">Cofra</option>
-                        <option value="Distribuidora del igual">Distribuidora del igual</option>
-                        <option value="Fredy Yerba">Fredy Yerba</option>
-                        <option value="Hann Verde">Hann Verde</option>
-                        <option value="Hettinger">Hettinger</option>
-                        <option value="Ilolay">Ilolay</option>
-                        <option value="JC distribución">JC distribución</option>
-                        <option value="Jony Milanesa">Jony Milanesa</option>
-                        <option value="Kriller">Kriller</option>
-                        <option value="La Agustina">La Agustina</option>
-                        <option value="La casona">La casona</option>
-                        <option value="Manaos">Manaos</option>
-                        <option value="Mariano">Mariano</option>
-                        <option value="Mercosur">Mercosur</option>
-                        <option value="Pan Colo">Pan Colo</option>
-                        <option value="Pan los Hermanos">Pan los Hermanos</option>
-                        <option value="Sandro">Sandro</option>
-                    </optgroup>
-                </select>
-            </div>
+            </select>
             <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
+            
+            <button class="btn-clear" id="clearBtn">🗑️ Limpiar Historial</button>
         </aside>
 
         <main class="charts-col">
@@ -100,11 +56,11 @@
         </main>
 
         <div class="glass-panel history-panel">
-            <div id="list" class="transaction-list"></div>
+            <h3>Historial</h3>
+            <div id="list"></div>
         </div>
     </div>
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>
