@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v6.0</title>
+    <title>FinanceFlow Session v8.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -18,7 +18,7 @@
 
     <div class="kpi-container">
         <div class="kpi-card main-balance">
-            <span class="kpi-label">BALANCE NETO</span>
+            <span class="kpi-label">BALANCE SESIÓN ACTUAL</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
         <div class="kpi-sub-row">
@@ -47,47 +47,28 @@
                     <option value="Inmuebles">🏠 Inmuebles</option>
                     <option value="Gastos Personales">👤 Personales</option>
                 </select>
-                <button class="btn-primary" id="addBtn">Registrar Movimiento</button>
+                <button class="btn-primary" id="addBtn">Añadir a la lista</button>
             </div>
         </section>
 
         <section class="charts-section">
             <div class="chart-card" id="lineBox">
-                <div class="chart-header">
-                    <span>FLUJO TEMPORAL</span>
-                    <small>Ver detalle 🔍</small>
-                </div>
-                <div class="canvas-wrapper">
-                    <canvas id="lineChart"></canvas>
-                </div>
+                <div class="chart-header"><span>FLUJO DE CAJA</span></div>
+                <div class="canvas-wrapper"><canvas id="lineChart"></canvas></div>
             </div>
             <div class="chart-card" id="pieBox">
-                <div class="chart-header">
-                    <span>DISTRIBUCIÓN POR CATEGORÍA</span>
-                    <small>Ver detalle 🔍</small>
-                </div>
-                <div class="canvas-wrapper">
-                    <canvas id="pieChart"></canvas>
-                </div>
+                <div class="chart-header"><span>DISTRIBUCIÓN CATEGORÍAS</span></div>
+                <div class="canvas-wrapper"><canvas id="pieChart"></canvas></div>
             </div>
         </section>
 
         <section class="glass-panel history-section">
             <div class="history-header">
-                <h3 class="section-title">Historial</h3>
-                <button id="clearBtn" class="btn-text-only">Borrar todo</button>
+                <h3 class="section-title">Historial de Sesión</h3>
+                <button id="clearBtn" class="btn-text-only">Limpiar pantalla</button>
             </div>
             <div id="list" class="transaction-list"></div>
         </section>
-    </div>
-</div>
-
-<div id="chartModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-body">
-            <canvas id="zoomedChart"></canvas>
-        </div>
     </div>
 </div>
 
