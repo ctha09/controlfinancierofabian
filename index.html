@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v7.0</title>
+    <title>FinanceFlow Elite v7.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -22,11 +22,11 @@
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
         <div class="kpi-card income-card">
-            <span class="kpi-label">INGRESOS</span>
+            <span class="kpi-label">TOTAL INGRESOS</span>
             <div class="kpi-value income-text" id="kpi-in">$0</div>
         </div>
         <div class="kpi-card expense-card">
-            <span class="kpi-label">GASTOS</span>
+            <span class="kpi-label">TOTAL EGRESOS</span>
             <div class="kpi-value expense-text" id="kpi-out">$0</div>
         </div>
     </div>
@@ -36,7 +36,7 @@
             <h3>Nueva Operación</h3>
             <div class="form-group">
                 <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Pago Alquiler">
+                <input type="text" id="desc" placeholder="Ej: Venta de productos">
             </div>
             <div class="form-group">
                 <label>Monto</label>
@@ -45,25 +45,29 @@
             <div class="form-group">
                 <label>Categoría</label>
                 <select id="cat">
-                    <option value="Ingreso">📈 Ingreso</option>
-                    <option value="Comida">🍕 Comida</option>
-                    <option value="Ocio">🎬 Ocio</option>
-                    <option value="Salud">💊 Salud</option>
-                    <option value="Transporte">🚗 Transporte</option>
-                    <option value="Otros">📦 Otros</option>
+                    <optgroup label="Entradas">
+                        <option value="Ingresos Reales">💰 Ingresos Reales</option>
+                        <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
+                    </optgroup>
+                    <optgroup label="Salidas">
+                        <option value="Egresos">💸 Egresos</option>
+                        <option value="Compra de Mercaderia">📦 Mercadería</option>
+                        <option value="Compra de Inmuebles">🏠 Inmuebles</option>
+                        <option value="Gastos Personales">🛍️ Gastos Personales</option>
+                    </optgroup>
                 </select>
             </div>
             <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Limpiar Todo el Historial</button>
+            <button class="btn-clear" id="clearBtn">Borrar Todo</button>
         </aside>
 
         <main class="charts-col">
             <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA 🔍</h4>
+                <h4 class="chart-title">FLUJO DE CAJA ACUMULADO 🔍</h4>
                 <canvas id="lineChart"></canvas>
             </div>
             <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">GASTOS POR CATEGORÍA 🔍</h4>
+                <h4 class="chart-title">DISTRIBUCIÓN DE EGRESOS 🔍</h4>
                 <canvas id="pieChart"></canvas>
             </div>
         </main>
