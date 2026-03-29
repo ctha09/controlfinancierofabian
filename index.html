@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<div id="notification-area"></div>
+
 <div class="container">
     <header>
         <h1 class="logo">💎 FinanceFlow Elite</h1>
@@ -36,7 +38,7 @@
             <h3>Nueva Operación</h3>
             <div class="form-group">
                 <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta de producto">
+                <input type="text" id="desc" placeholder="Ej: Venta Mercadería">
             </div>
             <div class="form-group">
                 <label>Monto</label>
@@ -45,16 +47,16 @@
             <div class="form-group">
                 <label>Categoría</label>
                 <select id="cat">
-                    <option value="Ingresos Reales">💰 Ingresos Reales</option>
-                    <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
+                    <option value="Ingresos Teóricos">💰 Ingresos Teóricos</option>
+                    <option value="Ingresos Reales">💵 Ingresos Reales</option>
                     <option value="Egresos">📉 Egresos</option>
-                    <option value="Mercaderias">📦 Compra Mercaderías</option>
-                    <option value="Inmuebles">🏠 Compra Inmuebles</option>
-                    <option value="Gastos Personales">👤 Gastos Personales</option>
+                    <option value="Gastos de Compra de Mercadería">📦 Compra Mercadería</option>
+                    <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
+                    <option value="Gastos Personales">🛍️ Gastos Personales</option>
                 </select>
             </div>
             <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Borrar Todo el Historial</button>
+            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
         </aside>
 
         <main class="charts-col">
@@ -63,7 +65,7 @@
                 <canvas id="lineChart"></canvas>
             </div>
             <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">GASTOS POR CATEGORÍA 🔍</h4>
+                <h4 class="chart-title">DISTRIBUCIÓN DE GASTOS 🔍</h4>
                 <canvas id="pieChart"></canvas>
             </div>
         </main>
