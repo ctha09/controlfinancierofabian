@@ -3,77 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v6.0</title>
+    <title>FinanceFlow Elite v7.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="notification-area"></div>
-
 <div class="container">
-    <header class="glass-header">
-        <h1 class="logo">💎 FinanceFlow <span class="promo">PROMO 2026</span></h1>
-        <button class="theme-btn" id="themeBtn">🌙 MODO</button>
+    <header>
+        <h1 class="logo">💎 FinanceFlow Elite</h1>
+        <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
     </header>
 
-    <div class="kpi-grid">
-        <div class="kpi-card balance">
-            <span class="label">BALANCE NETO</span>
-            <div class="value" id="kpi-balance">$0</div>
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <span class="kpi-label">BALANCE NETO</span>
+            <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
-        <div class="kpi-card income">
-            <span class="label">INGRESOS</span>
-            <div class="value" id="kpi-in">$0</div>
+        <div class="kpi-card income-card">
+            <span class="kpi-label">INGRESOS</span>
+            <div class="kpi-value income-text" id="kpi-in">$0</div>
         </div>
-        <div class="kpi-card expense">
-            <span class="label">GASTOS</span>
-            <div class="value" id="kpi-out">$0</div>
+        <div class="kpi-card expense-card">
+            <span class="kpi-label">GASTOS</span>
+            <div class="kpi-value expense-text" id="kpi-out">$0</div>
         </div>
     </div>
 
-    <div class="main-layout">
-        <aside class="glass-panel form-side">
+    <div class="db-grid">
+        <aside class="glass-panel form-section">
             <h3>Nueva Operación</h3>
-            <div class="input-box">
+            <div class="form-group">
                 <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta de käsestangen">
+                <input type="text" id="desc" placeholder="Ej: Pago Alquiler">
             </div>
-            <div class="input-box">
+            <div class="form-group">
                 <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00">
+                <input type="number" id="amt" placeholder="0.00" step="0.01">
             </div>
-            <div class="input-box">
+            <div class="form-group">
                 <label>Categoría</label>
                 <select id="cat">
-                    <option value="Ingresos Teóricos">💰 Ingresos Teóricos</option>
-                    <option value="Ingresos Reales">💵 Ingresos Reales</option>
-                    <option value="Egresos">📉 Egresos</option>
-                    <option value="Gastos de Compra de Mercadería">📦 Compra Mercadería</option>
-                    <option value="Compra de Inmuebles">🏠 Compra de Inmuebles</option>
-                    <option value="Gastos Personales">🛍️ Gastos Personales</option>
+                    <option value="Ingreso">📈 Ingreso</option>
+                    <option value="Comida">🍕 Comida</option>
+                    <option value="Ocio">🎬 Ocio</option>
+                    <option value="Salud">💊 Salud</option>
+                    <option value="Transporte">🚗 Transporte</option>
+                    <option value="Otros">📦 Otros</option>
                 </select>
             </div>
-            <button class="btn-main" id="addBtn">Registrar</button>
-            <button class="btn-sub" id="clearBtn">Limpiar Historial</button>
+            <button class="btn-add" id="addBtn">Registrar</button>
+            <button class="btn-clear" id="clearBtn">Limpiar Todo el Historial</button>
         </aside>
 
-        <main class="visual-side">
-            <div class="glass-panel chart-container">
-                <h4 class="chart-title">FLUJO DE CAJA</h4>
-                <div class="canvas-h"><canvas id="lineChart"></canvas></div>
+        <main class="charts-col">
+            <div class="chart-container" id="lineBox">
+                <h4 class="chart-title">FLUJO DE CAJA 🔍</h4>
+                <canvas id="lineChart"></canvas>
             </div>
-            <div class="glass-panel chart-container">
-                <h4 class="chart-title">DISTRIBUCIÓN DE GASTOS</h4>
-                <div class="canvas-h"><canvas id="pieChart"></canvas></div>
+            <div class="chart-container" id="pieBox">
+                <h4 class="chart-title">GASTOS POR CATEGORÍA 🔍</h4>
+                <canvas id="pieChart"></canvas>
             </div>
         </main>
 
-        <section class="glass-panel history-side">
-            <h3>Historial</h3>
-            <div id="list" class="list-wrapper"></div>
-        </section>
+        <div class="glass-panel history-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3>Historial</h3>
+                <small id="count-msg" style="color:var(--text-muted)"></small>
+            </div>
+            <div id="list" class="transaction-list"></div>
+        </div>
+    </div>
+</div>
+
+<div id="chartModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <canvas id="zoomedChart"></canvas>
+        </div>
     </div>
 </div>
 
