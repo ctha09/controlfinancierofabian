@@ -3,21 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDark = true;
 
     const listEl = document.getElementById('list');
-    const themeBtn = document.getElementById('themeBtn');
-    const addBtn = document.getElementById('addBtn');
-    const clearBtn = document.getElementById('clearBtn');
     const balanceEl = document.getElementById('kpi-balance');
 
-    // --- GRÁFICAS ---
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Balance Acumulado', data: [], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4 }] },
-        options: { 
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8' } } }
-        }
+        data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#6366f1', tension: 0.4 }] },
+        options: { responsive: true, maintainAspectRatio: false }
     });
 
     const pieCtx = document.getElementById('pieChart').getContext('2d');
@@ -25,16 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'doughnut',
         data: { 
             labels: ['Egresos', 'Mercadería', 'Inmuebles', 'Gastos Pers.', 'Proveedores'], 
-            datasets: [{ data: [0,0,0,0,0], backgroundColor: ['#f43f5e', '#fbbf24', '#3b82f6', '#10b981', '#a855f7'], borderWidth: 0 }] 
+            datasets: [{ data: [0,0,0,0,0], backgroundColor: ['#f43f5e', '#fbbf24', '#3b82f6', '#10b981', '#a855f7'] }] 
         },
-        options: { 
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
-        }
+        options: { responsive: true, maintainAspectRatio: false }
     });
 
     function updateUI() {
-        let balance = 0, income = 0, expenses = 0;
+        let balance = 0, income = 0, expenses = 0, providerTotal = 0;
         let catStats = { "Egresos": 0, "Compra de Mercaderia": 0, "Compra de Inmuebles": 0, "Gastos Personales": 0, "Proveedores": 0 };
         let lineData = [], lineLabels = [];
 
@@ -42,16 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         transactions.forEach((t) => {
             const isIncome = (t.cat === 'Ingresos Reales' || t.cat === 'Ingresos Teoricos');
-            
             if(isIncome) { 
                 balance += t.amt; income += t.amt; 
             } else { 
                 balance -= t.amt; expenses += t.amt;
-                // Si la categoría no es de las fijas, es un Proveedor
-                if(catStats[t.cat] !== undefined) {
-                    catStats[t.cat] += t.amt;
-                } else {
+                const fixedCats = ["Egresos", "Compra de Mercaderia", "Compra de Inmuebles", "Gastos Personales"];
+                if (!fixedCats.includes(t.cat)) {
+                    providerTotal += t.amt;
                     catStats["Proveedores"] += t.amt;
+                } else {
+                    catStats[t.cat] += t.amt;
                 }
             }
             lineData.push(balance);
@@ -59,54 +48,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const item = document.createElement('div');
             item.className = 't-item';
-            item.innerHTML = `
-                <div style="flex-grow:1">
-                    <strong style="display:block">${t.desc}</strong>
-                    <span class="t-date">${t.date} • ${t.cat}</span>
-                </div>
-                <div style="text-align:right">
-                    <span style="font-weight:800; color: ${isIncome ? 'var(--success)' : 'var(--danger)'}">
-                        ${isIncome ? '+' : '-'}$${t.amt.toLocaleString()}
-                    </span>
-                    <button class="delete-btn" onclick="deleteTransaction(${t.id})">🗑️</button>
-                </div>`;
+            item.innerHTML = `<div><strong>${t.desc}</strong><br><small>${t.date} • ${t.cat}</small></div>
+                <div><span style="color: ${isIncome ? 'var(--success)' : 'var(--danger)'}">${isIncome ? '+' : '-'}$${t.amt.toLocaleString()}</span>
+                <button class="delete-btn" onclick="deleteTransaction(${t.id})">🗑️</button></div>`;
             listEl.prepend(item);
         });
 
         balanceEl.innerText = `$${balance.toLocaleString()}`;
         document.getElementById('kpi-in').innerText = `$${income.toLocaleString()}`;
         document.getElementById('kpi-out').innerText = `$${expenses.toLocaleString()}`;
+        document.getElementById('kpi-providers').innerText = `$${providerTotal.toLocaleString()}`;
         
         lineChart.data.labels = lineLabels;
         lineChart.data.datasets[0].data = lineData;
         lineChart.update();
-        
         pieChart.data.datasets[0].data = Object.values(catStats);
         pieChart.update();
 
         localStorage.setItem('finance_v8_data', JSON.stringify(transactions));
     }
 
-    addBtn.onclick = () => {
+    document.getElementById('addBtn').onclick = () => {
         const d = document.getElementById('desc'), a = document.getElementById('amt'), c = document.getElementById('cat');
-        if(!d.value || !a.value) return alert("Completa los datos");
+        if(!d.value || !a.value) return;
         transactions.push({ id: Date.now(), desc: d.value, amt: parseFloat(a.value), cat: c.value, date: new Date().toLocaleDateString() });
         updateUI();
         d.value = ''; a.value = '';
     };
 
-    window.deleteTransaction = (id) => {
-        transactions = transactions.filter(t => t.id !== id);
-        updateUI();
-    };
-
-    clearBtn.onclick = () => { if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); } };
-
-    themeBtn.onclick = () => {
-        isDark = !isDark;
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        themeBtn.innerText = isDark ? '🌙 MODO OSCURO' : '☀️ MODO CLARO';
-    };
-
+    window.deleteTransaction = (id) => { transactions = transactions.filter(t => t.id !== id); updateUI(); };
+    document.getElementById('clearBtn').onclick = () => { if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); } };
+    
     updateUI();
 });
