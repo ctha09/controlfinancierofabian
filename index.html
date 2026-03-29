@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v8.0</title>
+    <title>FinanceFlow Elite v8.0 - Enterprise</title>
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -17,36 +18,52 @@
     </header>
 
     <div class="kpi-row">
-        <div class="kpi-card"><span class="kpi-label">BALANCE NETO</span><div class="kpi-value" id="kpi-balance">$0</div></div>
-        <div class="kpi-card"><span class="kpi-label">INGRESOS</span><div class="kpi-value income-text" id="kpi-in">$0</div></div>
-        <div class="kpi-card"><span class="kpi-label">EGRESOS</span><div class="kpi-value expense-text" id="kpi-out">$0</div></div>
-        <div class="kpi-card"><span class="kpi-label">PROVEEDORES</span><div class="kpi-value" id="kpi-providers" style="color:#a855f7">$0</div></div>
+        <div class="kpi-card">
+            <span class="kpi-label">BALANCE NETO</span>
+            <div class="kpi-value" id="kpi-balance">$0</div>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">INGRESOS</span>
+            <div class="kpi-value income-text" id="kpi-in">$0</div>
+        </div>
+        <div class="kpi-card">
+            <span class="kpi-label">EGRESOS</span>
+            <div class="kpi-value expense-text" id="kpi-out">$0</div>
+        </div>
+        <div class="kpi-card provider-card" id="openProvModal" style="cursor: pointer; border: 1px solid #a855f7;">
+            <span class="kpi-label">PROVEEDORES 🔍</span>
+            <div class="kpi-value" id="kpi-providers" style="color: #a855f7;">$0</div>
+            <small style="font-size: 0.6rem; opacity: 0.6;">Ver detalles</small>
+        </div>
     </div>
 
     <div class="db-grid">
         <aside class="glass-panel">
             <h3>Nueva Operación</h3>
-            <input type="text" id="desc" placeholder="Descripción">
+            <input type="text" id="desc" placeholder="Descripción (Ej: Factura Arcor)">
             <input type="number" id="amt" placeholder="Monto">
             <select id="cat">
-                <optgroup label="Entradas">
+                <optgroup label="General">
                     <option value="Ingresos Reales">Ingresos Reales</option>
                     <option value="Ingresos Teoricos">Ingresos Teóricos</option>
-                </optgroup>
-                <optgroup label="Salidas">
                     <option value="Egresos">Egresos General</option>
                     <option value="Compra de Mercaderia">Compra de Mercadería</option>
-                    <option value="Compra de Inmuebles">Compra de Inmuebles</option>
-                    <option value="Gastos Personales">Gastos Personales</option>
                 </optgroup>
                 <optgroup label="Proveedores">
                     <option value="Agronina">Agronina</option><option value="Arcor">Arcor</option>
-                    <option value="Coca cola">Coca cola</option><option value="Cofra">Cofra</option>
-                    <option value="Manaos">Manaos</option><option value="Sandro">Sandro</option>
-                    </optgroup>
+                    <option value="Ceferino">Ceferino</option><option value="Coca cola">Coca cola</option>
+                    <option value="Cofra">Cofra</option><option value="Distribuidora del igual">Distribuidora del igual</option>
+                    <option value="Fredy Yerba">Fredy Yerba</option><option value="Hann Verde">Hann Verde</option>
+                    <option value="Hettinger">Hettinger</option><option value="Ilolay">Ilolay</option>
+                    <option value="JC distribución">JC distribución</option><option value="Jony Milanesa">Jony Milanesa</option>
+                    <option value="Kriller">Kriller</option><option value="La Agustina">La Agustina</option>
+                    <option value="La casona">La casona</option><option value="Manaos">Manaos</option>
+                    <option value="Mariano">Mariano</option><option value="Mercosur">Mercosur</option>
+                    <option value="Pan Colo">Pan Colo</option><option value="Pan los Hermanos">Pan los Hermanos</option>
+                    <option value="Sandro">Sandro</option>
+                </optgroup>
             </select>
             <button class="btn-add" id="addBtn">Registrar</button>
-            
             <button class="btn-clear" id="clearBtn">🗑️ Limpiar Historial</button>
         </aside>
 
@@ -56,11 +73,27 @@
         </main>
 
         <div class="glass-panel history-panel">
-            <h3>Historial</h3>
-            <div id="list"></div>
+            <h3>Historial Reciente</h3>
+            <div id="list" class="transaction-list"></div>
         </div>
     </div>
 </div>
+
+<div id="provModal" class="modal">
+    <div class="modal-content glass-panel">
+        <div class="modal-header">
+            <h2 id="modalTitle">Proveedores</h2>
+            <button class="close-modal" id="closeBtn">&times;</button>
+        </div>
+        <div id="modalBodyList"></div>
+        <div id="modalBodyDetail" style="display: none;">
+            <button id="backBtn" class="back-link">← Volver</button>
+            <h3 id="detName"></h3>
+            <div id="detList"></div>
+        </div>
+    </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
