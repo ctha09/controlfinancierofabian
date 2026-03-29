@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Untitled</title>
-    <link rel="stylesheet" href="./style.css">
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -22,67 +11,74 @@
 <body>
 
 <div class="container">
-    <header>
-        <h1 class="logo">💎 FinanceFlow Elite</h1>
-        <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
+    <header class="app-header">
+        <h1 class="logo">💎 FinanceFlow</h1>
+        <button class="theme-toggle" id="themeBtn">🌙</button>
     </header>
 
-    <div class="kpi-row">
-        <div class="kpi-card">
+    <div class="kpi-container">
+        <div class="kpi-card main-balance">
             <span class="kpi-label">BALANCE NETO</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
-        <div class="kpi-card income-card">
-            <span class="kpi-label">TOTAL INGRESOS</span>
-            <div class="kpi-value income-text" id="kpi-in">$0</div>
-        </div>
-        <div class="kpi-card expense-card">
-            <span class="kpi-label">TOTAL EGRESOS</span>
-            <div class="kpi-value expense-text" id="kpi-out">$0</div>
+        <div class="kpi-sub-row">
+            <div class="kpi-card income-card">
+                <span class="kpi-label">INGRESOS</span>
+                <div class="kpi-value income-text" id="kpi-in">$0</div>
+            </div>
+            <div class="kpi-card expense-card">
+                <span class="kpi-label">EGRESOS</span>
+                <div class="kpi-value expense-text" id="kpi-out">$0</div>
+            </div>
         </div>
     </div>
 
-    <div class="db-grid">
-        <aside class="glass-panel form-section">
-            <h3>Nueva Operación</h3>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Venta de producto">
-            </div>
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="cat">
+    <div class="main-grid">
+        <section class="glass-panel action-panel">
+            <h3 class="section-title">Nueva Operación</h3>
+            <div class="form-grid">
+                <input type="text" id="desc" placeholder="Descripción" class="mobile-input">
+                <input type="number" id="amt" placeholder="Monto $0.00" class="mobile-input">
+                <select id="cat" class="mobile-input">
                     <option value="Ingresos Reales">💰 Ingresos Reales</option>
                     <option value="Ingresos Teoricos">📊 Ingresos Teóricos</option>
                     <option value="Egresos">📉 Egresos</option>
-                    <option value="Mercaderias">📦 Compra Mercaderías</option>
-                    <option value="Inmuebles">🏠 Compra Inmuebles</option>
-                    <option value="Gastos Personales">👤 Gastos Personales</option>
+                    <option value="Mercaderias">📦 Mercaderías</option>
+                    <option value="Inmuebles">🏠 Inmuebles</option>
+                    <option value="Gastos Personales">👤 Personales</option>
                 </select>
+                <button class="btn-primary" id="addBtn">Registrar Movimiento</button>
             </div>
-            <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="clearBtn">Limpiar Historial</button>
-        </aside>
+        </section>
 
-        <main class="charts-col">
-            <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA 🔍</h4>
-                <canvas id="lineChart"></canvas>
+        <section class="charts-section">
+            <div class="chart-card" id="lineBox">
+                <div class="chart-header">
+                    <span>FLUJO TEMPORAL</span>
+                    <small>Ver detalle 🔍</small>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="lineChart"></canvas>
+                </div>
             </div>
-            <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN POR CATEGORÍA 🔍</h4>
-                <canvas id="pieChart"></canvas>
+            <div class="chart-card" id="pieBox">
+                <div class="chart-header">
+                    <span>DISTRIBUCIÓN POR CATEGORÍA</span>
+                    <small>Ver detalle 🔍</small>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="pieChart"></canvas>
+                </div>
             </div>
-        </main>
+        </section>
 
-        <div class="glass-panel history-panel">
-            <h3>Historial</h3>
+        <section class="glass-panel history-section">
+            <div class="history-header">
+                <h3 class="section-title">Historial</h3>
+                <button id="clearBtn" class="btn-text-only">Borrar todo</button>
+            </div>
             <div id="list" class="transaction-list"></div>
-        </div>
+        </section>
     </div>
 </div>
 
@@ -97,9 +93,4 @@
 
 <script src="script.js"></script>
 </body>
-</html>
-    <script  src="./script.js"></script>
-
-  </body>
-  
 </html>
