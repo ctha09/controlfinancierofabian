@@ -2,14 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let transactions = JSON.parse(localStorage.getItem('finance_v6_data')) || [];
     let isDark = true;
 
-    // Elementos del DOM
     const listEl = document.getElementById('list');
     const themeBtn = document.getElementById('themeBtn');
     const addBtn = document.getElementById('addBtn');
     const clearBtn = document.getElementById('clearBtn');
     const modal = document.getElementById('chartModal');
     
-    // --- CONFIGURACIÓN DE GRÁFICAS ---
+    // --- GRÁFICAS ---
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
@@ -18,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: { 
-                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, 0.05)' } },
-                x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                y: { ticks: { color: '#94a3b8', font: { size: window.innerWidth < 768 ? 10 : 12 } }, grid: { color: 'rgba(148, 163, 184, 0.05)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: window.innerWidth < 768 ? 10 : 12 } }, grid: { display: false } }
             }
         }
     });
@@ -40,29 +39,21 @@ document.addEventListener('DOMContentLoaded', () => {
             plugins: { 
                 legend: { 
                     position: window.innerWidth < 768 ? 'bottom' : 'right',
-                    labels: { color: '#94a3b8', font: { size: 12 } } 
+                    labels: { color: '#94a3b8', font: { size: window.innerWidth < 768 ? 10 : 12 }, boxWidth: 10 } 
                 } 
             }
         }
     });
 
-    // --- FUNCIONES CORE ---
     function updateUI() {
         let balance = 0, income = 0, expenses = 0;
         let catStats = { "Egresos": 0, "Gastos de Compra de Mercadería": 0, "Compra de Inmuebles": 0, "Gastos Personales": 0 };
         let lineData = [], lineLabels = [];
 
         listEl.innerHTML = '';
-
         transactions.forEach((t) => {
-            const isIncome = t.cat.toLowerCase().includes("ingresos");
-
-            if(isIncome) {
-                balance += t.amt; income += t.amt;
-            } else {
-                balance -= t.amt; expenses += t.amt;
-                if(catStats[t.cat] !== undefined) catStats[t.cat] += t.amt;
-            }
+            const isInc = t.cat.toLowerCase().includes("ingresos");
+            isInc ? (balance += t.amt, income += t.amt) : (balance -= t.amt, expenses += t.amt, catStats[t.cat] !== undefined && (catStats[t.cat] += t.amt));
 
             lineData.push(balance);
             lineLabels.push(t.desc);
@@ -70,11 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
             listEl.innerHTML += `
                 <div class="t-item">
                     <div>
-                        <strong style="display:block">${t.desc}</strong>
-                        <small style="color:var(--text-muted)">${t.cat}</small>
+                        <strong style="font-size:0.95rem">${t.desc}</strong>
+                        <small style="display:block; color:var(--text-muted); font-size:0.75rem">${t.cat}</small>
                     </div>
-                    <div style="font-weight:800; color: ${isIncome ? 'var(--success)' : 'var(--danger)'}">
-                        ${isIncome ? '+' : '-'}$${t.amt.toLocaleString()}
+                    <div style="font-weight:800; color: ${isInc ? 'var(--success)' : 'var(--danger)'}">
+                        ${isInc ? '+' : '-'}$${t.amt.toLocaleString()}
                     </div>
                 </div>`;
         });
@@ -93,33 +84,21 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finance_v6_data', JSON.stringify(transactions));
     }
 
-    // --- LÓGICA DE PROYECCIÓN URL ---
+    // --- PROYECCIÓN URL ---
     function checkURL() {
-        const params = new URLSearchParams(window.location.search);
-        const desc = params.get('desc');
-        const amt = parseFloat(params.get('amt'));
-        const cat = params.get('cat');
-
-        if (desc && !isNaN(amt)) {
-            transactions.push({ desc: decodeURIComponent(desc), amt, cat: cat || 'Egresos' });
-            const notify = document.getElementById('notification-area');
-            notify.innerHTML = `<div class="url-alert">✨ Información proyectada cargada</div>`;
-            setTimeout(() => notify.innerHTML = '', 4000);
-            window.history.replaceState({}, document.title, window.location.pathname);
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('desc') && p.get('amt')) {
+            transactions.push({ desc: decodeURIComponent(p.get('desc')), amt: parseFloat(p.get('amt')), cat: p.get('cat') || 'Egresos' });
+            window.history.replaceState({}, '', window.location.pathname);
             updateUI();
         }
     }
 
-    // --- EVENTOS ---
     addBtn.onclick = () => {
-        const desc = document.getElementById('desc').value;
-        const amt = parseFloat(document.getElementById('amt').value);
-        const cat = document.getElementById('cat').value;
-        if(!desc || isNaN(amt)) return;
-        transactions.push({ desc, amt, cat });
-        updateUI();
-        document.getElementById('desc').value = '';
-        document.getElementById('amt').value = '';
+        const d = document.getElementById('desc'), a = document.getElementById('amt'), c = document.getElementById('cat');
+        if(!d.value || isNaN(parseFloat(a.value))) return;
+        transactions.push({ desc: d.value, amt: parseFloat(a.value), cat: c.value });
+        updateUI(); d.value = ''; a.value = '';
     };
 
     clearBtn.onclick = () => { if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); }};
@@ -127,27 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     themeBtn.onclick = () => {
         isDark = !isDark;
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        themeBtn.innerText = isDark ? '🌙 MODO OSCURO' : '☀️ MODO CLARO';
+        themeBtn.innerText = isDark ? '🌙 MODO' : '☀️ MODO';
     };
-
-    // Zoom modal logic
-    document.getElementById('lineBox').onclick = () => openZoom(lineChart);
-    document.getElementById('pieBox').onclick = () => openZoom(pieChart);
-    
-    let zoomedChart;
-    function openZoom(source) {
-        modal.style.display = "block";
-        if(zoomedChart) zoomedChart.destroy();
-        const ctx = document.getElementById('zoomedChart').getContext('2d');
-        zoomedChart = new Chart(ctx, {
-            type: source.config.type,
-            data: JSON.parse(JSON.stringify(source.data)),
-            options: { ...source.options, maintainAspectRatio: false }
-        });
-    }
-
-    document.querySelector('.close-modal').onclick = () => modal.style.display = "none";
-    window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; };
 
     checkURL();
     updateUI();
