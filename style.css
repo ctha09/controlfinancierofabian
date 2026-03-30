@@ -3,10 +3,8 @@
     --panel: #0f172a; 
     --text: #f1f5f9; 
     --text-muted: #94a3b8;
-    --border: rgba(255, 255, 255, 0.08); 
+    --border: rgba(255, 255, 255, 0.1); 
     --accent: #6366f1; 
-    --success: #10b981; 
-    --danger: #ef4444;
 }
 
 body { 
@@ -16,60 +14,60 @@ body {
     margin: 0; padding: 20px; 
 }
 
-/* CONTENEDOR PRINCIPAL */
+.container { max-width: 1400px; margin: 0 auto; }
+
+/* 1. FILA DE ARRIBA (KPIs) */
+.kpi-row { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
+.kpi-card { 
+    background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border); 
+}
+
+/* 2. EL GRID PRINCIPAL (Aquí estaba el error) */
 .db-grid { 
     display: grid; 
-    grid-template-columns: 320px 1fr 350px; 
+    grid-template-columns: 300px 1fr 320px; /* Tres columnas claras */
     gap: 20px; 
     align-items: start;
-    margin-top: 20px;
 }
 
-/* PANELES */
-.glass-panel, .kpi-card, .chart-container { 
-    background: var(--panel); 
-    padding: 20px; 
-    border-radius: 24px; 
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+.glass-panel { 
+    background: var(--panel); padding: 25px; border-radius: 24px; border: 1px solid var(--border); 
 }
 
-/* FIX PARA LOS GRÁFICOS (Para que no se encimen) */
+/* 3. COLUMNA DE GRÁFICOS (Para que no se encimen) */
 .charts-col {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-.chart-container { height: 320px !important; width: 100%; position: relative; }
+.chart-container { 
+    background: var(--panel); border-radius: 24px; border: 1px solid var(--border); 
+    height: 300px; padding: 15px; position: relative;
+}
 
-/* FIX PARA LA LISTA (Para que no sea gris) */
+/* 4. HISTORIAL (Sin fondo gris, integrado a la web) */
 .t-item { 
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px; margin-bottom: 10px; border-radius: 14px;
-    background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+    display: flex; justify-content: space-between; padding: 15px; margin-bottom: 10px; 
+    border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
 }
 
-/* FIX CRÍTICO: OCULTAR EL MODAL QUE SE VE ABAJO */
+/* 5. FIX CRÍTICO DEL MODAL (Para que no se vea abajo) */
 .modal { 
-    display: none; /* Esto lo oculta hasta que hagas clic */
-    position: fixed; z-index: 10000; 
-    left: 0; top: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    display: none; /* OCULTO POR DEFECTO */
+    position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
 }
-
 .modal-content { 
-    background: var(--panel) !important; 
-    margin: 5% auto; padding: 30px; width: 90%; max-width: 500px;
-    border-radius: 28px; border: 1px solid var(--border);
-    position: relative;
+    background: #0f172a !important; margin: 5% auto; padding: 30px; 
+    width: 90%; max-width: 500px; border-radius: 25px; border: 1px solid var(--border);
 }
 
-/* BOTÓN MODO OSCURO (Para que no se vea blanco plano) */
-#themeBtn {
-    background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border);
-    padding: 10px 20px; border-radius: 12px; cursor: pointer;
-}
-
+/* Responsivo para celulares */
 @media (max-width: 1100px) {
     .db-grid { grid-template-columns: 1fr; }
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
