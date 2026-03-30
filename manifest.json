@@ -1,16 +1,15 @@
 {
-  "name": "FinanceFlow Elite",
+  "name": "FinanceFlow Elite v7",
   "short_name": "FinanceFlow",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#6366f1",
   "icons": [
     {
-      "src": "logo.png",
-      "sizes": "1024x1024",
-      "type": "image/png",
-      "purpose": "any"
+      "src": "https://cdn-icons-png.flaticon.com/512/5501/5501375.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
