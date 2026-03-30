@@ -1,18 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     let transactions = JSON.parse(localStorage.getItem('finance_v8_data')) || [];
-    let isDark = true;
 
     const listEl = document.getElementById('list');
-    const themeBtn = document.getElementById('themeBtn');
+    const modal = document.getElementById('provModal'); // Asegúrate que este ID coincida en tu HTML
 
-    // Inicializar Gráficos
+    // Gráficos
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const pieCtx = document.getElementById('pieChart').getContext('2d');
 
     const lineChart = new Chart(lineCtx, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#6366f1', tension: 0.4, fill: true, backgroundColor: 'rgba(99, 102, 241, 0.05)' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        data: { labels: [], datasets: [{ label: 'Balance', data: [], borderColor: '#6366f1', tension: 0.4 }] },
+        options: { responsive: true, maintainAspectRatio: false }
     });
 
     const pieChart = new Chart(pieCtx, {
@@ -23,18 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         options: { responsive: true, maintainAspectRatio: false, cutout: '80%' }
     });
-
-    // Función de Iconos dinámicos
-    function getIcon(cat) {
-        const icons = {
-            "Ingresos Reales": "💰", "Ingresos Teoricos": "📊",
-            "Compra de Mercaderia": "📦", "Egresos": "💸",
-            "Gastos Personales": "👤", "Compra de Inmuebles": "🏠",
-            "Coca cola": "🥤", "Manaos": "🍹", "Arcor": "🍭", 
-            "Agronina": "🚜", "Sandro": "🥩", "Cofra": "🐷"
-        };
-        return icons[cat] || "🏷️";
-    }
 
     function updateUI() {
         let bal = 0, inc = 0, exp = 0, provTotal = 0;
@@ -54,23 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 't-item';
             item.innerHTML = `
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="font-size:1.5rem; background:rgba(255,255,255,0.05); padding:10px; border-radius:12px;">${getIcon(t.cat)}</div>
-                    <div><strong style="display:block">${t.desc}</strong><small style="color:var(--text-muted)">${t.cat}</small></div>
-                </div>
-                <span style="color:${isInc ? 'var(--success)' : 'var(--danger)'}; font-weight:800; font-size:1.1rem">
-                    ${isInc ? '+' : '-'}$${t.amt.toLocaleString()}
-                </span>`;
+                <div><strong>${t.desc}</strong><br><small style="color:var(--text-muted)">${t.cat}</small></div>
+                <span style="color:${isInc ? 'var(--success)' : 'var(--danger)'}; font-weight:800">$${t.amt.toLocaleString()}</span>`;
             listEl.prepend(item);
         });
 
-        // Actualizar KPIs
         document.getElementById('kpi-balance').innerText = `$${bal.toLocaleString()}`;
         document.getElementById('kpi-in').innerText = `$${inc.toLocaleString()}`;
         document.getElementById('kpi-out').innerText = `$${exp.toLocaleString()}`;
         document.getElementById('kpi-providers').innerText = `$${provTotal.toLocaleString()}`;
 
-        // Gráficos
         pieChart.data.datasets[0].data = Object.values(stats);
         pieChart.update();
         lineChart.data.labels = transactions.map(t => t.date);
@@ -80,23 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finance_v8_data', JSON.stringify(transactions));
     }
 
-    // Botón de Tema
-    themeBtn.onclick = () => {
-        isDark = !isDark;
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        themeBtn.innerHTML = isDark ? '🌙 MODO OSCURO' : '☀️ MODO CLARO';
-    };
+    // Funciones de apertura del modal
+    document.getElementById('openProvModal').onclick = () => { modal.style.display = "block"; };
+    document.getElementById('closeBtn').onclick = () => { modal.style.display = "none"; };
 
-    // Agregar Operación
     document.getElementById('addBtn').onclick = () => {
         const d = document.getElementById('desc'), a = document.getElementById('amt'), c = document.getElementById('cat');
         if(!d.value || !a.value) return;
         transactions.push({ id: Date.now(), desc: d.value, amt: parseFloat(a.value), cat: c.value, date: new Date().toLocaleDateString() });
         updateUI(); d.value = ''; a.value = '';
     };
-
-    // Limpiar Historial
-    document.getElementById('clearBtn').onclick = () => { if(confirm("¿Borrar todo?")) { transactions = []; updateUI(); } };
 
     updateUI();
 });
