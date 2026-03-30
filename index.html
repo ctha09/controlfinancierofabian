@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v6.0 - Gestión Comercial</title>
+    <title>FinanceFlow Elite v7.0 - Mensualizado</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -13,34 +13,46 @@
 <div class="container">
     <header>
         <h1 class="logo">💎 FinanceFlow Elite</h1>
-        <button class="theme-btn" id="themeBtn">🌙 MODO OSCURO</button>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="theme-btn" id="themeBtn">🌙</button>
+        </div>
     </header>
 
-    <div class="kpi-row">
-        <div class="kpi-card">
-            <span class="kpi-label">BALANCE NETO</span>
+    <div class="month-nav glass-panel">
+        <button onclick="changeMonth(-1)" class="nav-btn">❮</button>
+        <h2 id="current-month-display" style="margin:0; min-width:200px; text-align:center; text-transform: capitalize;">Abril 2026</h2>
+        <button onclick="changeMonth(1)" class="nav-btn">❯</button>
+    </div>
+
+    <div class="kpi-row" id="main-kpis">
+        <div class="kpi-card" id="card-balance">
+            <span class="kpi-label">BALANCE DEL MES</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
-        <div class="kpi-card income-card">
-            <span class="kpi-label">INGRESOS (REAL + TEOR)</span>
+        <div class="kpi-card income-card-bg">
+            <span class="kpi-label">➕ INGRESOS</span>
             <div class="kpi-value income-text" id="kpi-in">$0</div>
         </div>
-        <div class="kpi-card expense-card">
-            <span class="kpi-label">TOTAL EGRESOS</span>
+        <div class="kpi-card expense-card-bg">
+            <span class="kpi-label">➖ EGRESOS</span>
             <div class="kpi-value expense-text" id="kpi-out">$0</div>
+        </div>
+        <div class="kpi-card" id="kpi-prov-card" style="cursor:pointer; border: 1px solid var(--accent);">
+            <span class="kpi-label">🏢 PROVEEDORES</span>
+            <div class="kpi-value" id="kpi-prov-count" style="color:var(--accent)">0</div>
         </div>
     </div>
 
-    <div class="db-grid">
+    <div class="db-grid" id="main-dashboard">
         <aside class="glass-panel form-section">
             <h3>Nueva Operación</h3>
             <div class="form-group">
                 <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Factura de Harina">
+                <input type="text" id="desc" placeholder="Ej: Venta del día">
             </div>
             <div class="form-group">
                 <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00" step="0.01">
+                <input type="number" id="amt" placeholder="0.00">
             </div>
             <div class="form-group">
                 <label>Categoría</label>
@@ -54,9 +66,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Proveedor / Origen</label>
+                <label>Proveedor</label>
                 <select id="prov">
-                    <option value="Consumidor Final">— Consumidor Final / Otro —</option>
+                    <option value="Consumidor Final">Consumidor Final</option>
                     <option value="Hettinger">Hettinger</option>
                     <option value="Cofra">Cofra</option>
                     <option value="Pan Coló">Pan Coló</option>
@@ -86,28 +98,33 @@
 
         <main class="charts-col">
             <div class="chart-container" id="lineBox">
-                <h4 class="chart-title">FLUJO DE CAJA (EVOLUCIÓN) 🔍</h4>
                 <canvas id="lineChart"></canvas>
             </div>
             <div class="chart-container" id="pieBox">
-                <h4 class="chart-title">DISTRIBUCIÓN POR CATEGORÍA 🔍</h4>
                 <canvas id="pieChart"></canvas>
             </div>
         </main>
 
         <div class="glass-panel history-panel">
-            <h3>Historial de Movimientos</h3>
+            <h3>Historial del Mes</h3>
             <div id="list" class="transaction-list"></div>
         </div>
     </div>
-</div>
 
-<div id="chartModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-body">
-            <canvas id="zoomedChart"></canvas>
+    <div id="view-proveedores" class="glass-panel" style="display:none; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Proveedores</h2>
+            <button class="theme-btn" onclick="showMainView()">✕ Cerrar</button>
         </div>
+        <div id="prov-grid" class="prov-grid"></div>
+    </div>
+
+    <div id="view-detalle-proveedor" class="glass-panel" style="display:none; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 id="detalle-nombre-prov">Proveedor</h2>
+            <button class="theme-btn" onclick="showProvidersView()">← Volver</button>
+        </div>
+        <div id="prov-history-list" class="transaction-list"></div>
     </div>
 </div>
 
