@@ -1,37 +1,85 @@
-/* MODAL PRO */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #0f172a;
+    color: white;
+    margin: 0;
+    padding: 20px;
 }
 
-.modal-content {
-    width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
+.container {
+    max-width: 1200px;
+    margin: auto;
 }
 
-.modal-header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.close-modal {
-    background: none;
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.kpi-card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.db-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    gap: 20px;
+}
+
+.panel {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+input, select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #020617;
     border: none;
-    font-size: 24px;
     color: white;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
     cursor: pointer;
 }
 
-.back-link {
-    background: none;
-    border: none;
-    color: var(--accent);
-    cursor: pointer;
-    margin-bottom: 10px;
+.t-item {
+    background: #020617;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
 }
