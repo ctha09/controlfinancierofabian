@@ -1,184 +1,108 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    let transactions = JSON.parse(localStorage.getItem('finance_v8_data')) || [];
+    let transactions = JSON.parse(localStorage.getItem('data')) || [];
 
-    const listEl = document.getElementById('list');
+    const list = document.getElementById('list');
     const modal = document.getElementById('provModal');
     const modalList = document.getElementById('modalBodyList');
-    const modalDetail = document.getElementById('modalBodyDetail');
-    const detList = document.getElementById('detList');
-    const detName = document.getElementById('detName');
 
     let lineChart, pieChart;
 
     function updateUI() {
-        let bal = 0, inc = 0, exp = 0, provTotal = 0;
-        listEl.innerHTML = '';
+        let bal = 0, inc = 0, exp = 0, providers = {};
 
-        const providerData = {};
+        list.innerHTML = '';
 
         transactions.forEach(t => {
-            const isInc = t.cat.startsWith("Ingresos");
-
-            if (isInc) {
+            if (t.cat.includes("Ingresos")) {
                 bal += t.amt;
                 inc += t.amt;
             } else {
                 bal -= t.amt;
                 exp += t.amt;
 
-                if (!t.cat.includes("Egresos")) {
-                    provTotal += t.amt;
-                    providerData[t.cat] = (providerData[t.cat] || 0) + t.amt;
+                if (t.cat !== "Egresos") {
+                    providers[t.cat] = (providers[t.cat] || 0) + t.amt;
                 }
             }
 
-            const item = document.createElement('div');
-            item.className = 't-item';
-            item.innerHTML = `
-                <div>
-                    <strong>${t.desc}</strong><br>
-                    <small style="color:var(--text-muted)">
-                        ${t.cat} • ${t.date}
-                    </small>
-                </div>
-                <span style="color:${isInc?'var(--success)':'var(--danger)'}; font-weight:800">
-                    $${t.amt.toLocaleString()}
-                </span>
-            `;
-            listEl.prepend(item);
+            const div = document.createElement('div');
+            div.className = 't-item';
+            div.innerHTML = `${t.desc} <b>$${t.amt}</b>`;
+            list.prepend(div);
         });
 
-        // KPIs
-        document.getElementById('kpi-balance').innerText = `$${bal.toLocaleString()}`;
-        document.getElementById('kpi-in').innerText = `$${inc.toLocaleString()}`;
-        document.getElementById('kpi-out').innerText = `$${exp.toLocaleString()}`;
-        document.getElementById('kpi-providers').innerText = `$${provTotal.toLocaleString()}`;
+        document.getElementById('kpi-balance').innerText = bal;
+        document.getElementById('kpi-in').innerText = inc;
+        document.getElementById('kpi-out').innerText = exp;
+        document.getElementById('kpi-providers').innerText =
+            Object.values(providers).reduce((a,b)=>a+b,0);
 
-        localStorage.setItem('finance_v8_data', JSON.stringify(transactions));
+        localStorage.setItem('data', JSON.stringify(transactions));
 
-        renderCharts(inc, exp, providerData);
-        renderProviders(providerData);
+        drawCharts(inc, exp, providers);
+        drawProviders(providers);
     }
 
-    // ✅ AGREGAR TRANSACCIÓN
     document.getElementById('addBtn').onclick = () => {
-        const d = document.getElementById('desc');
-        const a = document.getElementById('amt');
-        const c = document.getElementById('cat');
+        const desc = document.getElementById('desc').value;
+        const amt = parseFloat(document.getElementById('amt').value);
+        const cat = document.getElementById('cat').value;
 
-        const amount = parseFloat(a.value);
+        if (!desc || !amt) return alert("Completa los datos");
 
-        if (!d.value || isNaN(amount) || amount <= 0) {
-            alert("Datos inválidos");
-            return;
-        }
-
-        transactions.push({
-            desc: d.value,
-            amt: amount,
-            cat: c.value,
-            date: new Date().toLocaleDateString()
-        });
-
-        d.value = '';
-        a.value = '';
-        c.selectedIndex = 0;
-        d.focus();
-
+        transactions.push({desc, amt, cat});
         updateUI();
     };
 
-    // ✅ LIMPIAR
     document.getElementById('clearBtn').onclick = () => {
-        if (confirm("¿Borrar todo?")) {
-            transactions = [];
-            updateUI();
-        }
+        transactions = [];
+        updateUI();
     };
 
-    // ✅ MODO OSCURO
     document.getElementById('themeBtn').onclick = () => {
-        const html = document.documentElement;
-        const theme = html.getAttribute('data-theme');
-
-        html.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
+        document.body.style.background =
+            document.body.style.background === "white" ? "#0f172a" : "white";
     };
 
-    // ✅ GRÁFICOS
-    function renderCharts(inc, exp, providers) {
+    function drawCharts(inc, exp, providers) {
         if (lineChart) lineChart.destroy();
         if (pieChart) pieChart.destroy();
 
-        const ctx1 = document.getElementById('lineChart');
-        const ctx2 = document.getElementById('pieChart');
-
-        lineChart = new Chart(ctx1, {
+        lineChart = new Chart(document.getElementById('lineChart'), {
             type: 'bar',
             data: {
-                labels: ['Ingresos', 'Egresos'],
-                datasets: [{
-                    data: [inc, exp]
-                }]
+                labels: ['Ingresos','Egresos'],
+                datasets: [{ data: [inc, exp] }]
             }
         });
 
-        pieChart = new Chart(ctx2, {
+        pieChart = new Chart(document.getElementById('pieChart'), {
             type: 'pie',
             data: {
                 labels: Object.keys(providers),
-                datasets: [{
-                    data: Object.values(providers)
-                }]
+                datasets: [{ data: Object.values(providers) }]
             }
         });
     }
 
-    // ✅ PROVEEDORES
-    function renderProviders(providers) {
+    function drawProviders(providers) {
         modalList.innerHTML = '';
 
-        Object.entries(providers).forEach(([name, total]) => {
+        Object.entries(providers).forEach(([name,total]) => {
             const div = document.createElement('div');
             div.className = 't-item';
-            div.innerHTML = `
-                <span>${name}</span>
-                <strong>$${total.toLocaleString()}</strong>
-            `;
-
-            div.onclick = () => showProviderDetail(name);
+            div.innerHTML = `${name} <b>$${total}</b>`;
             modalList.appendChild(div);
         });
     }
 
-    function showProviderDetail(name) {
-        modalList.style.display = 'none';
-        modalDetail.style.display = 'block';
-        detName.innerText = name;
-        detList.innerHTML = '';
-
-        transactions
-            .filter(t => t.cat === name)
-            .forEach(t => {
-                const div = document.createElement('div');
-                div.className = 't-item';
-                div.innerHTML = `${t.desc} - $${t.amt}`;
-                detList.appendChild(div);
-            });
-    }
-
-    // MODAL
     document.getElementById('openProvModal').onclick = () => {
         modal.style.display = 'flex';
     };
 
     document.getElementById('closeBtn').onclick = () => {
         modal.style.display = 'none';
-    };
-
-    document.getElementById('backBtn').onclick = () => {
-        modalList.style.display = 'block';
-        modalDetail.style.display = 'none';
     };
 
     updateUI();
