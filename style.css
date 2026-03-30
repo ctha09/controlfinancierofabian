@@ -1,6 +1,6 @@
 :root {
     --bg: #030712; 
-    --panel: #0f172a; /* Azul marino profundo, no gris */
+    --panel: #0f172a; 
     --text: #f1f5f9; 
     --text-muted: #94a3b8;
     --border: rgba(255, 255, 255, 0.08); 
@@ -16,70 +16,61 @@ body {
     margin: 0; padding: 20px; 
 }
 
-.container { max-width: 1400px; margin: 0 auto; }
-
-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-
-/* KPIs */
-.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
-.kpi-card { 
-    background: var(--panel); padding: 20px; border-radius: 20px; 
-    border: 1px solid var(--border); transition: 0.3s;
-}
-.kpi-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-
-/* GRID PRINCIPAL CORREGIDO */
+/* CONTENEDOR PRINCIPAL */
 .db-grid { 
     display: grid; 
     grid-template-columns: 320px 1fr 350px; 
     gap: 20px; 
-    align-items: start; /* Evita que los paneles se estiren raro */
+    align-items: start;
+    margin-top: 20px;
 }
 
-.glass-panel { 
-    background: var(--panel); padding: 25px; border-radius: 24px; 
-    border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+/* PANELES */
+.glass-panel, .kpi-card, .chart-container { 
+    background: var(--panel); 
+    padding: 20px; 
+    border-radius: 24px; 
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* INPUTS */
-input, select { 
-    width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); 
-    border: 1px solid var(--border); border-radius: 12px; color: white; 
-    margin-bottom: 12px; box-sizing: border-box; outline: none;
+/* FIX PARA LOS GRÁFICOS (Para que no se encimen) */
+.charts-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
+.chart-container { height: 320px !important; width: 100%; position: relative; }
 
-.btn-add { 
-    width: 100%; padding: 16px; background: var(--accent); color: white; 
-    border: none; border-radius: 12px; font-weight: 800; cursor: pointer;
-}
-
-/* LISTA DE TRANSACCIONES */
+/* FIX PARA LA LISTA (Para que no sea gris) */
 .t-item { 
     display: flex; justify-content: space-between; align-items: center;
     padding: 15px; margin-bottom: 10px; border-radius: 14px;
     background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
 }
 
-/* GRÁFICOS */
-.chart-container { 
-    background: var(--panel); border-radius: 24px; border: 1px solid var(--border); 
-    height: 300px; padding: 20px; margin-bottom: 20px;
-}
-
-/* MODAL (FIX: Ahora sí estará oculto y por encima de todo) */
+/* FIX CRÍTICO: OCULTAR EL MODAL QUE SE VE ABAJO */
 .modal { 
-    display: none; position: fixed; z-index: 9999; 
+    display: none; /* Esto lo oculta hasta que hagas clic */
+    position: fixed; z-index: 10000; 
     left: 0; top: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
 }
+
 .modal-content { 
     background: var(--panel) !important; 
     margin: 5% auto; padding: 30px; width: 90%; max-width: 500px;
     border-radius: 28px; border: 1px solid var(--border);
+    position: relative;
 }
 
-/* BOTÓN MODO OSCURO */
-.theme-btn {
-    background: white; color: black; border: none; padding: 8px 15px;
-    border-radius: 10px; font-weight: 700; cursor: pointer;
+/* BOTÓN MODO OSCURO (Para que no se vea blanco plano) */
+#themeBtn {
+    background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border);
+    padding: 10px 20px; border-radius: 12px; cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+    .db-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
 }
