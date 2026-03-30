@@ -1,85 +1,57 @@
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 20px;
+:root {
+    --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+    --border: #334155; --accent: #6366f1; --success: #10b981; --danger: #f43f5e;
+    --inc-bg: rgba(16, 185, 129, 0.15); --exp-bg: rgba(244, 63, 94, 0.15);
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+.container { max-width: 1400px; margin: 0 auto; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.logo { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+
+/* BARRA DE MES */
+.month-nav {
+    display: flex; justify-content: center; align-items: center; 
+    gap: 30px; margin-bottom: 25px; padding: 15px !important;
+}
+.nav-btn {
+    background: var(--accent); color: white; border: none; 
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+.kpi-card { background: var(--panel); padding: 20px; border-radius: 18px; border: 1px solid var(--border); }
+.kpi-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 800; }
+.kpi-value { font-size: 1.6rem; font-weight: 800; margin-top: 5px; }
 
-.kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-}
+.income-text { color: var(--success); }
+.expense-text { color: var(--danger); }
 
-.kpi-card {
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 10px;
-}
+.db-grid { display: grid; grid-template-columns: 300px 1fr 320px; gap: 20px; }
+.glass-panel { background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
 
-.db-grid {
-    display: grid;
-    grid-template-columns: 250px 1fr 250px;
-    gap: 20px;
-}
+.form-group { margin-bottom: 12px; }
+label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box; }
 
-.panel {
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 10px;
-}
+.btn-add { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.btn-clear { background: none; border: none; color: var(--text-muted); font-size: 0.7rem; width: 100%; margin-top: 10px; cursor: pointer; }
 
-input, select {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    background: #020617;
-    border: none;
-    color: white;
-}
+.amt-badge { padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.85rem; }
+.amt-badge.inc { background: var(--inc-bg); color: var(--success); }
+.amt-badge.exp { background: var(--exp-bg); color: var(--danger); }
 
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    cursor: pointer;
-}
+.charts-col { display: flex; flex-direction: column; gap: 20px; }
+.chart-container { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; height: 300px; padding: 15px; }
 
-.t-item {
-    background: #020617;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-}
+.history-panel { max-height: 620px; overflow-y: auto; }
+.t-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
 
-/* MODAL */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-}
+.delete-btn { background: none; border: none; cursor: pointer; filter: grayscale(1); opacity: 0.6; }
+.delete-btn:hover { opacity: 1; filter: grayscale(0); }
 
-.modal-content {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-}
+.prov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+.theme-btn { background: var(--panel); border: 1px solid var(--border); color: white; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
+
+@media (max-width: 1000px) { .db-grid { grid-template-columns: 1fr; } .kpi-row { grid-template-columns: 1fr 1fr; } }
