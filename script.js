@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     let transactions = JSON.parse(localStorage.getItem('finance_v7_data')) || [];
     let isDark = true;
-    let viewDate = new Date(2026, 3, 1); // Abril 1, 2026
+    let viewDate = new Date(); // Inicia en el día de hoy
 
     const listEl = document.getElementById('list');
-    const themeBtn = document.getElementById('themeBtn');
     const addBtn = document.getElementById('addBtn');
     
     // --- GRÁFICAS ---
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         options: { responsive: true, maintainAspectRatio: false }
     });
 
-    // --- NAVEGACIÓN DIARIA ---
+    // --- NAVEGACIÓN ---
     window.changeDay = (delta) => {
         viewDate.setDate(viewDate.getDate() + delta);
         updateUI();
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('main-dashboard').style.display = 'none';
         document.getElementById('main-kpis').style.display = 'none';
         document.getElementById('view-proveedores').style.display = 'block';
-        document.getElementById('view-detalle-proveedor').style.display = 'none';
         renderProvidersList();
     };
 
@@ -60,44 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function renderProvidersList() {
-        const grid = document.getElementById('prov-grid');
-        grid.innerHTML = '';
-        const providers = [...new Set(transactions.map(t => t.prov))];
-        providers.forEach(p => {
-            const count = transactions.filter(t => t.prov === p).length;
-            grid.innerHTML += `<div class="kpi-card prov-item" onclick="showProviderDetail('${p}')">
-                <strong>${p}</strong><br><small>${count} Op. Totales</small>
-            </div>`;
-        });
-    }
-
-    window.showProviderDetail = (name) => {
-        document.getElementById('view-proveedores').style.display = 'none';
-        document.getElementById('view-detalle-proveedor').style.display = 'block';
-        document.getElementById('detalle-nombre-prov').innerText = name;
-        const filtered = transactions.filter(t => t.prov === name);
-        const list = document.getElementById('prov-history-list');
-        list.innerHTML = filtered.map(t => `
-            <div class="t-item">
-                <div>${t.desc}<br><small>${new Date(t.date).toLocaleDateString()}</small></div>
-                <div class="amt-badge ${t.cat.includes('Ingresos')?'inc':'exp'}">$${t.amt.toLocaleString()}</div>
-            </div>`).join('');
-    };
-
     function updateUI() {
-        // Actualizar visualización de fecha
         const options = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
         let formattedDate = viewDate.toLocaleDateString('es-ES', options);
         document.getElementById('current-date-display').innerText = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
         document.getElementById('display-date-form').value = viewDate.toLocaleDateString('es-ES');
 
-        // Filtrar transacciones del DÍA
         const filtered = transactions.filter(t => {
             const d = new Date(t.date);
-            return d.getDate() === viewDate.getDate() && 
-                   d.getMonth() === viewDate.getMonth() && 
-                   d.getFullYear() === viewDate.getFullYear();
+            return d.getDate() === viewDate.getDate() && d.getMonth() === viewDate.getMonth() && d.getFullYear() === viewDate.getFullYear();
         });
 
         let bal = 0, inc = 0, exp = 0;
@@ -109,18 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const isInc = t.cat.includes('Ingresos');
             if(isInc) { bal += t.amt; inc += t.amt; } else { bal -= t.amt; exp += t.amt; }
             cats[t.cat] += t.amt;
-            lData.push(bal); 
-            lLabels.push(t.desc);
-
-            // Buscamos el índice original para la eliminación
-            const globalIndex = transactions.indexOf(t);
+            lData.push(bal); lLabels.push(t.desc);
 
             listEl.innerHTML = `
                 <div class="t-item">
                     <div><strong>${t.desc}</strong><br><small>${t.prov}</small></div>
                     <div style="display:flex; align-items:center; gap:10px;">
                         <div class="amt-badge ${isInc?'inc':'exp'}">${isInc?'+':'-'} $${t.amt.toLocaleString()}</div>
-                        <button class="delete-btn" onclick="deleteTransaction(${globalIndex})">🗑️</button>
+                        <button class="delete-btn" onclick="deleteTransaction(${transactions.indexOf(t)})">🗑️</button>
                     </div>
                 </div>` + listEl.innerHTML;
         });
@@ -130,36 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('kpi-out').innerText = `$${exp.toLocaleString()}`;
         document.getElementById('kpi-prov-count').innerText = [...new Set(filtered.map(t => t.prov))].length;
 
-        lineChart.data.labels = lLabels; 
-        lineChart.data.datasets[0].data = lData; 
-        lineChart.update();
-        
-        pieChart.data.datasets[0].data = Object.values(cats); 
-        pieChart.update();
-
+        lineChart.data.labels = lLabels; lineChart.data.datasets[0].data = lData; lineChart.update();
+        pieChart.data.datasets[0].data = Object.values(cats); pieChart.update();
         localStorage.setItem('finance_v7_data', JSON.stringify(transactions));
     }
 
     addBtn.addEventListener('click', () => {
         const desc = document.getElementById('desc').value;
         const amt = parseFloat(document.getElementById('amt').value);
-        if(!desc || isNaN(amt)) {
-            alert("Por favor completa descripción y monto");
-            return;
-        }
-
-        // Registrar con la fecha exacta del visor
-        transactions.push({ 
-            desc, 
-            amt, 
-            cat: document.getElementById('cat').value, 
-            prov: document.getElementById('prov').value, 
-            date: new Date(viewDate) 
-        });
-
+        if(!desc || isNaN(amt)) return;
+        transactions.push({ desc, amt, cat: document.getElementById('cat').value, prov: document.getElementById('prov').value, date: new Date(viewDate) });
         updateUI();
-        document.getElementById('desc').value = ''; 
-        document.getElementById('amt').value = '';
+        document.getElementById('desc').value = ''; document.getElementById('amt').value = '';
     });
 
     document.getElementById('themeBtn').onclick = () => {
@@ -167,22 +114,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     };
 
-    document.getElementById('clearBtn').onclick = () => { 
-        if(confirm("¿Borrar TODOS los datos históricos de la aplicación?")) { 
-            transactions = []; 
-            updateUI(); 
-        } 
-    };
-
+    document.getElementById('clearBtn').onclick = () => { if(confirm("¿Borrar TODO?")) { transactions = []; updateUI(); } };
+    
     window.exportData = () => {
         const blob = new Blob([JSON.stringify(transactions)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `backup_finance_full.json`;
+        a.download = `backup_finance.json`;
         a.click();
     };
 
     document.getElementById('kpi-prov-card').onclick = showProvidersView;
-    
     updateUI();
 });
