@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinanceFlow Elite v7.0</title>
+    <title>FinanceFlow Elite v10.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -31,20 +31,20 @@
 
     <div class="kpi-row" id="main-kpis">
         <div class="kpi-card">
-            <span class="kpi-label">BALANCE DEL DÍA</span>
+            <span class="kpi-label">BALANCE ACUMULADO</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
         <div class="kpi-card inc-border">
-            <span class="kpi-label">➕ INGRESOS</span>
+            <span class="kpi-label">➕ INGRESOS HOY</span>
             <div class="kpi-value inc-text" id="kpi-in">$0</div>
         </div>
         <div class="kpi-card exp-border">
-            <span class="kpi-label">➖ EGRESOS</span>
+            <span class="kpi-label">➖ EGRESOS HOY</span>
             <div class="kpi-value exp-text" id="kpi-out">$0</div>
         </div>
-        <div class="kpi-card" id="kpi-prov-card" style="cursor:pointer; border: 1px solid var(--accent);">
-            <span class="kpi-label">🏢 PROVEEDORES</span>
-            <div class="kpi-value" id="kpi-prov-count" style="color:var(--accent)">0</div>
+        <div class="kpi-card" style="border: 1px solid var(--accent);">
+            <span class="kpi-label">📊 BALANCE DEL MES</span>
+            <div class="kpi-value" id="kpi-month-net" style="color:var(--accent)">$0</div>
         </div>
     </div>
 
@@ -55,14 +55,8 @@
                 <label>Fecha de Registro</label>
                 <input type="text" id="display-date-form" disabled style="font-weight: bold; color: var(--accent);">
             </div>
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" id="desc" placeholder="Ej: Pago de Harina">
-            </div>
-            <div class="form-group">
-                <label>Monto</label>
-                <input type="number" id="amt" placeholder="0.00">
-            </div>
+            <div class="form-group"><label>Descripción</label><input type="text" id="desc" placeholder="Ej: Venta del día"></div>
+            <div class="form-group"><label>Monto</label><input type="number" id="amt" placeholder="0.00"></div>
             <div class="form-group">
                 <label>Categoría</label>
                 <select id="cat">
@@ -75,7 +69,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Proveedor</label>
+                <label>Proveedor/Origen</label>
                 <select id="prov">
                     <option value="Consumidor Final">Consumidor Final</option>
                     <option value="Hettinger">Hettinger</option>
@@ -116,15 +110,6 @@
             <div id="list" class="transaction-list"></div>
         </div>
     </div>
-
-    <div id="view-proveedores" class="glass-panel" style="display:none;">
-        <div class="header-flex"><h2>Proveedores Activos</h2><button class="theme-btn" onclick="showMainView()">✕</button></div>
-        <div id="prov-grid" class="prov-grid"></div>
-    </div>
-    <div id="view-detalle-proveedor" class="glass-panel" style="display:none;">
-        <div class="header-flex"><h2 id="detalle-nombre-prov"></h2><button class="theme-btn" onclick="showProvidersView()">←</button></div>
-        <div id="prov-history-list" class="transaction-list"></div>
-    </div>
 </div>
 
 <script src="script.js"></script>
@@ -135,7 +120,7 @@
                 const installingWorker = reg.installing;
                 installingWorker.onstatechange = () => {
                     if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        if(confirm("Nueva actualización disponible. ¿Cargar ahora?")) window.location.reload();
+                        window.location.reload();
                     }
                 };
             };
