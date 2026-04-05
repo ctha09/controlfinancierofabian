@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
-    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5501/5501375.png">
@@ -23,14 +22,17 @@
     </header>
 
     <div class="month-nav glass-panel">
-        <button onclick="changeMonth(-1)" class="nav-btn">❮</button>
-        <h2 id="current-month-display">Abril 2026</h2>
-        <button onclick="changeMonth(1)" class="nav-btn">❯</button>
+        <button onclick="changeDay(-1)" class="nav-btn">❮</button>
+        <div style="position: relative; cursor: pointer; text-align: center;" onclick="document.getElementById('calendar-picker').showPicker()">
+            <h2 id="current-date-display" style="margin:0; min-width: 200px;">Cargando fecha...</h2>
+            <input type="date" id="calendar-picker" style="position:absolute; top:0; left:0; opacity:0; width:100%; height:100%; cursor:pointer;" onchange="goToDate(this.value)">
+        </div>
+        <button onclick="changeDay(1)" class="nav-btn">❯</button>
     </div>
 
     <div class="kpi-row" id="main-kpis">
         <div class="kpi-card">
-            <span class="kpi-label">BALANCE MENSUAL</span>
+            <span class="kpi-label">BALANCE DEL DÍA</span>
             <div class="kpi-value" id="kpi-balance">$0</div>
         </div>
         <div class="kpi-card inc-border">
@@ -50,6 +52,10 @@
     <div class="db-grid" id="main-dashboard">
         <aside class="glass-panel">
             <h3>Nueva Operación</h3>
+            <div class="form-group">
+                <label>Fecha Seleccionada</label>
+                <input type="text" id="display-date-form" disabled style="font-weight: bold; color: var(--accent);">
+            </div>
             <div class="form-group">
                 <label>Descripción</label>
                 <input type="text" id="desc" placeholder="Ej: Pago de Harina">
@@ -97,7 +103,7 @@
                 </select>
             </div>
             <button class="btn-add" id="addBtn">Registrar</button>
-            <button class="btn-clear" id="exportBtn" onclick="exportData()">💾 Exportar Backup</button>
+            <button class="btn-clear" onclick="exportData()">💾 Exportar Backup</button>
             <button class="btn-clear" id="clearBtn">⚠️ Borrar Todo</button>
         </aside>
 
@@ -107,7 +113,7 @@
         </main>
 
         <div class="glass-panel history-panel">
-            <h3>Historial del Mes</h3>
+            <h3>Historial del Día</h3>
             <div id="list" class="transaction-list"></div>
         </div>
     </div>
@@ -130,10 +136,5 @@
 </div>
 
 <script src="script.js"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-</script>
 </body>
 </html>
